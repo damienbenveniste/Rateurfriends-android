@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RatingView">
+        <attr name="RatingViewTitle" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="LevelView">
+    </declare-styleable>
+
+    <declare-styleable name="IntegerButton">
+    </declare-styleable>
+</resources>

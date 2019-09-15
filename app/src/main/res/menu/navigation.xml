@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_friends_feed"
+        android:icon="@drawable/feed_icon_selector"
+        android:title="@string/title_feed" />
+
+    <item
+        android:id="@+id/navigation_search"
+        android:icon="@drawable/search_icon_selector"
+        android:title="@string/title_search" />
+
+    <item
+        android:id="@+id/navigation_hall_of_fame"
+        android:icon="@drawable/hall_of_fame_icon_selector"
+        android:title="@string/title_hall" />
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/profile_icon_selector"
+        android:title="@string/title_profile" />
+
+    <item
+        android:id="@+id/navigation_market_place"
+        android:icon="@drawable/market_icon_selector"
+        android:title="@string/title_market_place" />
+
+</menu>

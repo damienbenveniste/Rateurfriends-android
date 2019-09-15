@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="none">
+        <item android:id="@+id/invite_item"
+            android:icon="@drawable/ic_person_add_black_24dp"
+            android:title="Invite your Friends" />
+        <item android:id="@+id/signout_item"
+            android:icon="@drawable/ic_close_black_24dp"
+            android:title="Sign Out" />
+    </group>
+</menu>

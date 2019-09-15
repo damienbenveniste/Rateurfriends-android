@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<color name="colorPrimary">#3F51B5</color>-->
+    <!--<color name="colorPrimaryDark">#303F9F</color>-->
+    <!--<color name="colorAccent">#FF4081</color>-->
+    <color name="transparent">#00000000</color>
+
+    <color name="colorPrimary">#ff7043</color>
+    <color name="colorPrimaryDark">#AC1A1A</color>
+    <color name="colorPrimaryLight">#ffa270</color>
+    <color name="white">#FFFFFF</color>
+    <color name="colorAccent">#32cb00</color>
+    <color name="colorPrimaryText">#5d4037</color>
+    <color name="colorPrimaryTint">#ffe54c</color>
+
+    <color name="background_logo">#ebddd4</color>
+
+    <color name="aqua">#00FFFF</color>
+
+    <!--original theme color-->
+    <!--<color name="themeColor">#cd7f32</color>-->
+    <!--<color name="themeColor">#f5970c</color>-->
+    <color name="themeColor">#d5700c</color>
+
+    <color name="sky_blue">#25B8FF</color>
+
+    <!--<color name="themeColor">#d4af37</color>-->
+
+    <!--<color name="themeColor">#B3cd7f32</color>-->
+
+    <color name="themeColor2">#edac77</color>
+
+
+    <color name="starColor">#F5B041</color>
+    <!--<color name="transparent_grey">#40B6B6B6</color>-->
+
+    <color name="transparent_white">#B3FFFFFF</color>
+    <color name="transparent_orange">#B3ffa270</color>
+    <color name="transparent_dark">#B35d4037</color>
+
+    <color name="primary">#4CAF50</color>
+    <!--<color name="card_background">#fbe9e7</color>-->
+    <color name="card_background">#fbe9e7</color>
+    <color name="divider">#B6B6B6</color>
+</resources>

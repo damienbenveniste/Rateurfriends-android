@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.ProfileFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="56dp"
+        android:gravity="center_horizontal">
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/bt_filter_view"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            app:cornerRadius="20dp"
+            app:icon="@drawable/ic_tune_black_24dp"
+            app:iconGravity="textStart"
+            android:text="Filter" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingBottom="56dp"
+                    android:id="@+id/main_layout"
+                    android:gravity="center_horizontal"/>
+
+
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:background="@color/transparent_dark"
+        android:id="@+id/layout_filter"
+        android:visibility="visible"
+        android:clickable="true"
+        android:layout_height="match_parent">
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/white"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="56dp"
+            android:layout_gravity="center"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="5dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/bt_cancel"
+                android:layout_marginTop="-5dp"
+                android:layout_width="40dp"
+                android:layout_height="50dp"
+                android:paddingStart="20dp"
+                android:layout_gravity="right"
+                app:cornerRadius="30dp"
+                app:icon="@drawable/ic_cancel_black_24dp"
+                app:iconGravity="textStart" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center"
+                android:baselineAligned="false">
+
+                <EditText
+                    android:id="@+id/et_category_search"
+                    android:layout_width="match_parent"
+                    android:hint="Search a Quality"
+                    android:layout_height="50dp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_categories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/category_layout"
+                    android:gravity="center">
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/bt_local_filter"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryText"
+                        app:showText="true"
+                        android:checked="true"
+                        android:text="Show for"
+                        android:textOn="Local Only"
+                        android:textOff="All" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/bt_average_filter"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryText"
+                        app:showText="true"
+                        android:checked="true"
+                        android:text="Order By"
+                        android:textOn="Star Count"
+                        android:textOff="Average" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/bt_high_to_low_filter"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:showText="true"
+                        android:checked="true"
+                        android:textColor="@color/colorPrimaryText"
+                        android:text="Direction"
+                        android:textOn="High to Low"
+                        android:textOff="Low to High" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/bt_by_category"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimaryText"
+                        app:showText="true"
+                        android:checked="true"
+                        android:text="Filter"
+                        android:textOn="By category"
+                        android:textOff="Overall" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/bt_submit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="20dp"
+                        app:cornerRadius="20dp"
+                        android:text="submit"
+                        app:icon="@drawable/ic_check_circle_green_24dp"
+                        app:iconGravity="textStart" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </FrameLayout>
+
+
+
+
+
+
+</FrameLayout>
