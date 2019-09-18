@@ -72,16 +72,29 @@ class ProfileCategoryAdapter constructor(
         layout.visibility = View.GONE
     }
 
-    fun submitIncrement(layout: FrameLayout, integerButton: IntegerButton, category: Category, position: Int ) {
+    private fun submitIncrement(layout: FrameLayout, integerButton: IntegerButton, category: Category, position: Int ) {
 
+        fragment.progressLayout!!.visibility = View.VISIBLE
         try {
             if (Globals.getInstance().user!!.spareStars - integerButton.integerValue >= 0
                     && integerButton.integerValue > 0) {
-                UserDAO.transferStarsForUser(userId, integerButton.integerValue, category) {
-                    updateCategory(category, position)
-                    Globals.getInstance().user!!.spareStars -= integerButton.integerValue
-                }
-                removeLayout(layout, integerButton, false)
+                UserDAO.transferStarsForUser(
+                        userId,
+                        integerButton.integerValue,
+                        category,
+                        onSuccess = {
+                            fragment.progressLayout!!.visibility = View.GONE
+                            updateCategory(category, position)
+                            Globals.getInstance().user!!.spareStars -= integerButton.integerValue
+
+                            removeLayout(layout, integerButton, false)
+                        } ,
+                        onFailure = {
+
+                            fragment.progressLayout!!.visibility = View.GONE
+                            removeLayout(layout, integerButton, true)
+                        }
+                )
             } else {
                 throw Exception("Globals.getInstance().user!!.spareStars - integerButton.integerValue < 0")
             }

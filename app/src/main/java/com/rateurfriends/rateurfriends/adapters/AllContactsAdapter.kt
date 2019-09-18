@@ -65,14 +65,15 @@ class AllContactsAdapter(
 
         if (contact.knownUser) {
             holder.inviteButton.visibility = View.GONE
-            holder.inviteButton.setOnClickListener {
-                //TODO: add permission to access sms
-                //TODO: change to invite
-            }
+//            holder.inviteButton.setOnClickListener {
+//                //TODO: add permission to access sms
+//                //TODO: change to invite
+//            }
         } else if (contact.invited) {
             holder.inviteButton.visibility = View.VISIBLE
             holder.inviteButton.alpha = 0.2f
 
+            // todo: to change. Just to prevent to send text to anyone else
             if (contact.phoneName == "AUser") {
                 holder.inviteButton.setOnClickListener {
                     holder.inviteButton.isEnabled = false
@@ -99,37 +100,7 @@ class AllContactsAdapter(
         }
     }
 
-//    fun generateLongContentLink(): Uri {
-//        val baseUrl = Uri.parse("https://rateurfriends.com/google-maps")
-////        val domain = "https://rateurfriends.page.link"
-//        val domain = "https://rateurfriends.com"
-//
-//        return FirebaseDynamicLinks.getInstance()
-//                .createDynamicLink()
-//                .setLink(baseUrl)
-//                .setDomainUriPrefix(domain)
-//                .setAndroidParameters(DynamicLink.AndroidParameters.Builder("com.rateurfriends.rateurfriends").build())
-//                .buildDynamicLink().uri
-//    }
-
-//    fun generateShortContentLink(callback: (String) -> Unit) {
-//
-//        val uri = generateLongContentLink()
-//        println(uri)
-//        FirebaseDynamicLinks.getInstance()
-//                .createDynamicLink()
-//                .setLongLink(uri)
-//                .buildShortDynamicLink()
-//                .addOnSuccessListener {
-//                    callback(it.shortLink.toString())
-//                }.addOnFailureListener { println(it) }
-//
-//
-//
-//
-//    }
-
-    private fun rewardUser(contact: Contact, position: Int) {
+    private fun rewardUser(contact: Contact) {
         val user = Globals.getInstance().user!!
         val increment = 1
 
@@ -158,20 +129,15 @@ class AllContactsAdapter(
 
     private fun onShareClicked(contact: Contact, position: Int) {
 
-
-//        rewardUser(contact)
-
         val smsManager = SmsManager.getDefault() as SmsManager
-
-        val SENT = "SMS_SENT"
-        val sentPI = PendingIntent.getBroadcast(mContext, 0, Intent(SENT), 0)
+        val sentPI = PendingIntent.getBroadcast(mContext, 0, Intent( "SMS_SENT"), 0)
 
         mContext.registerReceiver(
                 object : BroadcastReceiver() {
                     override fun onReceive(arg0: Context, arg1: Intent) {
                         when (resultCode) {
                             Activity.RESULT_OK -> {
-                                rewardUser(contact, position)
+                                rewardUser(contact)
                             }
                             SmsManager.RESULT_ERROR_GENERIC_FAILURE -> {
                             }
@@ -183,7 +149,7 @@ class AllContactsAdapter(
                             }
                         }
                     }
-                }, IntentFilter(SENT))
+                }, IntentFilter( "SMS_SENT"))
 
 
 

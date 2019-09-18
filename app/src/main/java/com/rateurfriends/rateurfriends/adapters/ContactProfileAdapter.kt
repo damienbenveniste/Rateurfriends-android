@@ -35,8 +35,11 @@ class ContactProfileAdapter constructor(
         // todo: show phoneName!!
         if (userId in userMap) {
             val user = userMap[userId]!!
-            holder.contactNameTextView.text = if (contact.phoneName.isNotEmpty())
-                contact.phoneName else user.userName
+            holder.contactNameTextView.text = user.userName
+            if (contact.phoneName.isNotEmpty()) {
+                holder.phoneNameTextView.text = contact.phoneName
+
+            }
             holder.startRatingView.rating = user.meanStarNumber
             holder.starNumberTextView.text = "★%d".format(user.totalStarNumber)
             holder.starMeanTextView.text = "%.1f".format(user.meanStarNumber)
@@ -51,8 +54,11 @@ class ContactProfileAdapter constructor(
             holder.levelView.levelText = ""
 
             UserDAO.getUser(userId) {
-                holder.contactNameTextView.text = if (contact.phoneName.isNotEmpty())
-                    contact.phoneName else it.userName
+                holder.contactNameTextView.text = it.userName
+                if (contact.phoneName.isNotEmpty()) {
+                    holder.phoneNameTextView.text = contact.phoneName
+
+                }
                 holder.startRatingView.rating = it.meanStarNumber
                 holder.starNumberTextView.text = "★%d".format(it.totalStarNumber)
                 holder.starMeanTextView.text = "%.1f".format(it.meanStarNumber)
@@ -79,6 +85,7 @@ class ContactProfileAdapter constructor(
         internal var starNumberTextView: TextView = itemView.findViewById(R.id.tv_star_count)
         internal var starMeanTextView: TextView = itemView.findViewById(R.id.tv_star_mean)
         internal var levelView: LevelView = itemView.findViewById(R.id.level_view)
+        internal var phoneNameTextView: TextView = itemView.findViewById(R.id.tv_phone_name)
 
         init {
 
@@ -117,7 +124,9 @@ class ContactProfileAdapter constructor(
                         if (contact.userId in userMap) {
                             val user = userMap[contact.userId]!!
                             if (user.userName.toLowerCase().contains(charString.toLowerCase()) ||
-                                    user.phoneNumber.contains(charSequence)) {
+                                    user.phoneNumber.contains(charSequence) ||
+                                    contact.phoneName.toLowerCase().contains(
+                                            charString.toLowerCase())) {
                                 filteredList.add(contact)
                             }
                         }

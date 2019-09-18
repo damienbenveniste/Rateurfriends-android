@@ -46,27 +46,6 @@ class CategoryDAO {
 
         }
 
-//        private fun insertCategoryForUser(category: Category, userId: String) {
-//
-//            val db = FirebaseFirestore.getInstance()
-//            val batch = db.batch()
-//
-//            val refAttribute = db.collection("UserAttribute")
-//                    .document(userId)
-//                    .collection("Category")
-//                    .document(category.categoryName)
-//
-//            val refCategory = db.collection("Category")
-//                    .document(category.categoryName)
-//                    .collection("User")
-//                    .document(userId)
-//
-//            batch.set(refAttribute, category)
-//            batch.set(refCategory, category)
-//
-//            batch.commit()
-//        }
-
         fun insertCategoryForUser(category: Category, user: User, callback: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
@@ -85,6 +64,13 @@ class CategoryDAO {
             batch.set(refAttribute, category)
             batch.set(refCategory, category)
 
+            batch.set(
+                    db.collection("Category")
+                            .document(category.categoryName),
+                    mapOf( "count" to FieldValue.increment(1)),
+                    SetOptions.merge()
+            )
+
             if (user.country.isNotEmpty()) {
 
                 val countryCategoryRef = db.collection("Country")
@@ -95,6 +81,15 @@ class CategoryDAO {
                         .document(user.userId)
 
                 batch.set(countryCategoryRef, category)
+
+                batch.set(
+                        db.collection("Country")
+                                .document(user.country)
+                                .collection("Category")
+                                .document(category.categoryName),
+                        mapOf( "count" to FieldValue.increment(1)),
+                        SetOptions.merge()
+                )
             }
 
             batch.commit()
@@ -102,10 +97,6 @@ class CategoryDAO {
                         callback()
                     }
         }
-
-//        fun insertCategoryListForUser(categoryList: List<Category>, userId: String) {
-//            categoryList.forEach { category -> insertCategoryForUser(category, userId) }
-//        }
 
         fun getCategoriesForUser(userId: String, callback: (QuerySnapshot) -> Unit) {
 

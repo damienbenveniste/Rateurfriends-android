@@ -9,6 +9,7 @@ import com.rateurfriends.rateurfriends.models.User
 import com.rateurfriends.rateurfriends.R
 import com.rateurfriends.rateurfriends.adapters.ContactProfileAdapter
 import android.view.MenuInflater
+import android.widget.FrameLayout
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +24,7 @@ class SearchFragment : Fragment() , ContactProfileAdapter.ItemClickListener {
 
     var rvContacts: RecyclerView? = null
     var searchView: SearchView? = null
+    var progressLayout: FrameLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +42,8 @@ class SearchFragment : Fragment() , ContactProfileAdapter.ItemClickListener {
         }
 
         rvContacts = view.findViewById(R.id.rv_contacts) as RecyclerView
+        progressLayout = view.findViewById(R.id.progress_layout)
+
         searchController!!.getContacts()
 
 

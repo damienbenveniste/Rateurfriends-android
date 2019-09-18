@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.Switch
 import android.widget.ToggleButton
 import androidx.appcompat.widget.SwitchCompat
@@ -38,6 +39,7 @@ class FeedFragment : Fragment(),
     var feedList: ArrayList<Feed> = arrayListOf()
     var feedAdapter: FeedAdapter? = null
     var feedButton: SwitchCompat? = null
+    var progressLayout: FrameLayout? = null
 
     private var feedController: FeedController? = null
 
@@ -60,6 +62,8 @@ class FeedFragment : Fragment(),
 
         feedButton = view.findViewById(R.id.bt_feed_toggle) as SwitchCompat
         rvFeed = view.findViewById(R.id.rv_feed) as RecyclerView
+        progressLayout = view.findViewById(R.id.progress_layout)
+
         rvFeed!!.adapter = feedAdapter
         rvFeed!!.layoutManager = LinearLayoutManager(this.activity)
 
@@ -68,6 +72,7 @@ class FeedFragment : Fragment(),
         }
 
         feedController!!.changeFeedState()
+        progressLayout!!.visibility = View.VISIBLE
 
         return view
     }

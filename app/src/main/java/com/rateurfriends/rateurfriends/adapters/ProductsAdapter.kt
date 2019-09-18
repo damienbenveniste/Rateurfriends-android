@@ -30,8 +30,6 @@ class ProductsAdapter(
         holder.buyButton.setOnClickListener { onProductClicked(productList[position]) }
     }
 
-
-
     inner class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         internal var productNameTextView: TextView

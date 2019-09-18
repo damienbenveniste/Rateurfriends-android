@@ -12,15 +12,17 @@ class Feed(
 
         val userName: String = "",
 
-        var message: String = "",
-
         val totalStarNumber: Int = 0,
 
         val meanStarNumber: Double = 0.0,
 
         val feedType: String = "",
 
-        val country: String = ""
+        val country: String = "",
+
+        val categoryName: String = "",
+
+        val rating: Int = 0
 
 ) {
 
@@ -43,7 +45,7 @@ class Feed(
 
     @Exclude
     fun levelNumber(): Int {
-        return this.totalStarNumber / 1000
+        return this.totalStarNumber /1000
     }
 
     @Exclude

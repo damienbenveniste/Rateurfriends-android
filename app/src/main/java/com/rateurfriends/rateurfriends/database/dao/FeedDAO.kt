@@ -4,6 +4,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.rateurfriends.rateurfriends.helperClasses.Globals
+import com.rateurfriends.rateurfriends.models.Contact
 import com.rateurfriends.rateurfriends.models.Feed
 
 class FeedDAO {
@@ -66,6 +67,57 @@ class FeedDAO {
                             callback(snapshot.map { it.toObject(Feed::class.java) })
                         }
                     }
+        }
+
+        fun addCategoryFeed(categoryName: String) {
+
+            val db = FirebaseFirestore.getInstance()
+
+            val user = Globals.getInstance().user
+
+            if (user != null) {
+
+                db.collection("UserAttribute")
+                        .document(user.userId)
+                        .collection("Contact")
+                        .get()
+                        .addOnSuccessListener {
+                            if (!it.isEmpty && it != null) {
+                                val contactList = it.map { doc -> doc.toObject(Contact::class.java) }
+
+                                for (contact in contactList) {
+
+                                    val feedId = user.userId + "_" + (System.currentTimeMillis() / 1000L).toString()
+
+                                    db.collection("UserAttribute")
+                                            .document(contact.userId)
+                                            .collection("Contact")
+                                            .document(user.userId)
+                                            .get()
+                                            .addOnSuccessListener { snapshot ->
+                                                if (snapshot.exists()) {
+
+                                                    val feed = Feed(
+                                                            feedId = feedId,
+                                                            userId = user.userId,
+                                                            userName = user.userName,
+                                                            categoryName = categoryName,
+                                                            feedType = "category_added"
+                                                    )
+
+                                                    db.collection("UserAttribute")
+                                                            .document(contact.userId)
+                                                            .collection("Feed")
+                                                            .document(feedId)
+                                                            .set(feed)
+
+                                                }
+                                            }
+                                }
+                            }
+                        }
+            }
+
         }
 
     }

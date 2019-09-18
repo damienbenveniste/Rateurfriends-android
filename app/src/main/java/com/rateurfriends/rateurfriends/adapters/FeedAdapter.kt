@@ -1,14 +1,11 @@
 package com.rateurfriends.rateurfriends.adapters
 
-import android.content.Context
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.res.TypedArrayUtils.getString
-import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.rateurfriends.rateurfriends.R
@@ -17,7 +14,6 @@ import com.rateurfriends.rateurfriends.database.dao.PictureDAO
 import com.rateurfriends.rateurfriends.database.dao.UserDAO
 import com.rateurfriends.rateurfriends.models.Feed
 import com.rateurfriends.rateurfriends.models.User
-import java.util.logging.Level
 
 class FeedAdapter(
         private val feedList: List<Feed>,
@@ -32,26 +28,82 @@ class FeedAdapter(
     override fun onBindViewHolder(holder: FeedViewHolder, position: Int) {
         val feed = feedList[position]
 
-        holder.feedTypeTextView.text = if (feed.feedType in listOf("", "level_passed"))
-            "Level Passed!" else ""
+        when (feed.feedType) {
+            "level_passed" -> {
+                holder.levelView.visibility = View.VISIBLE
+                holder.feedTypeTextView.text = "Level Passed!"
 
-        holder.message.text = Html.fromHtml(fragment.context!!.getString(R.string.feed_text)
-                .format(
-                        feed.userName,
-                        feed.levelNumber(),
-                        feed.getNearestStarThreshold()
+                holder.message.text = Html.fromHtml(fragment.context!!.getString(R.string.feed_text)
+                        .format(
+                                feed.userName,
+                                feed.levelNumber(),
+                                feed.getNearestStarThreshold()
+                        )
                 )
-        )
 
-        holder.levelView.levelText = feed.level
+                holder.levelView.levelText = feed.level
 
-        PictureDAO.populateImageViewWithUserId(
-                feed.userId,
-                holder.pictureImageView,
-                fragment.context!!
-        )
+                PictureDAO.populateImageViewWithUserId(
+                        feed.userId,
+                        holder.pictureImageView,
+                        fragment.context!!
+                )
+            }
+            // todo : to remove when the dev data will have a feedtype
+            "" -> {
 
+                holder.levelView.visibility = View.VISIBLE
+                holder.feedTypeTextView.text = "Level Passed!"
 
+                holder.message.text = Html.fromHtml(fragment.context!!.getString(R.string.feed_text)
+                        .format(
+                                feed.userName,
+                                feed.levelNumber(),
+                                feed.getNearestStarThreshold()
+                        )
+                )
+
+                holder.levelView.levelText = feed.level
+
+                PictureDAO.populateImageViewWithUserId(
+                        feed.userId,
+                        holder.pictureImageView,
+                        fragment.context!!
+                )
+
+            }
+            "vote_added" -> {
+
+                holder.feedTypeTextView.text = "More Stars!"
+
+                holder.message.text = "A user rated you %d stars on the %s quality".format(
+                        feed.rating,
+                        feed.categoryName
+                )
+
+                holder.pictureImageView.setImageResource(R.drawable.com_facebook_profile_picture_blank_square)
+
+                holder.levelView.visibility = View.GONE
+
+            }
+            "category_added" -> {
+                holder.levelView.visibility = View.VISIBLE
+                holder.feedTypeTextView.text = "One More Quality!"
+
+                holder.message.text = "%s added the %s quality. You can rate this quality now.".format(
+                        feed.userName,
+                        feed.categoryName
+                )
+
+                holder.levelView.visibility = View.GONE
+
+                PictureDAO.populateImageViewWithUserId(
+                        feed.userId,
+                        holder.pictureImageView,
+                        fragment.context!!
+                )
+            }
+        }
     }
 
     inner class FeedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -71,11 +123,12 @@ class FeedAdapter(
             itemView.setOnClickListener {
                 val feed = feedList[adapterPosition]
                 val userId = feed.userId
-                UserDAO.getUser(userId) {
-                    val listener = fragment as ItemClickListener
-                    listener.onItemClicked(it, "")
+                if (feed.feedType != "vote_added") {
+                    UserDAO.getUser(userId) {
+                        val listener = fragment as ItemClickListener
+                        listener.onItemClicked(it, "")
+                    }
                 }
-
             }
         }
     }

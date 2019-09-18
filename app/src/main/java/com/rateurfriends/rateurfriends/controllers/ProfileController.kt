@@ -24,6 +24,7 @@ import com.rateurfriends.rateurfriends.helperClasses.Globals
 import com.rateurfriends.rateurfriends.models.Category
 import android.widget.EditText
 import androidx.appcompat.widget.AppCompatButton
+import com.rateurfriends.rateurfriends.database.dao.FeedDAO
 
 
 class ProfileController(
@@ -282,6 +283,8 @@ class ProfileController(
         val userId = FirebaseAuth.getInstance().currentUser!!.uid
         CategoryDAO.getCategoriesForUser(userId) {
 
+            fragment.progressLayout!!.visibility = View.GONE
+
             for (doc in it) {
                 val category = doc.toObject(Category::class.java)
                 categoryList.add(category)
@@ -303,6 +306,8 @@ class ProfileController(
         val addCategoryEditText = fragment.addCategoryEditText
         val addCategoryLayout = fragment.addCategoryLayout
         val spareCategoriesTextView = fragment.spareCategoriesTextView
+
+        fragment.progressLayout!!.visibility = View.VISIBLE
 
         if (addCategoryEditText == null ||
                 addCategoryLayout == null ||
@@ -326,6 +331,9 @@ class ProfileController(
                         Globals.getInstance().user!!.userId,
                         increment
                 ) {
+
+                    fragment.progressLayout!!.visibility = View.GONE
+
                     categoryList.add(0, category)
                     categoriesAdapter!!.notifyItemInserted(0)
                     addCategoryLayout.visibility = View.GONE
@@ -341,6 +349,8 @@ class ProfileController(
                     }
 
                 }
+
+                FeedDAO.addCategoryFeed(category.categoryName)
             }
         }
 

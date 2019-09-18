@@ -19,6 +19,7 @@ class FeedController(
                 fragment.feedList.add(it)
             }
             fragment.feedAdapter!!.notifyDataSetChanged()
+            fragment.progressLayout!!.visibility = View.GONE
         }
     }
 
@@ -31,6 +32,7 @@ class FeedController(
                 fragment.feedList.add(it)
             }
             fragment.feedAdapter!!.notifyDataSetChanged()
+            fragment.progressLayout!!.visibility = View.GONE
         }
     }
 

@@ -50,6 +50,7 @@ class ContactProfileActivity : AppCompatActivity() , ContactCategoryAdapter.Item
     var ratingBar: RatingBar? = null
     var meanStarTextView: TextView? = null
     var startNumberTextView: TextView? = null
+    var progressLayout: FrameLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +79,7 @@ class ContactProfileActivity : AppCompatActivity() , ContactCategoryAdapter.Item
         ratingBar = findViewById(R.id.star_rating) as RatingBar
         meanStarTextView = findViewById(R.id.tv_mean_star) as TextView
         startNumberTextView = findViewById(R.id.tv_start_number) as TextView
+        progressLayout = findViewById(R.id.progress_layout)
 
         rvCategories!!.addItemDecoration(
                 DividerItemDecoration(this, DividerItemDecoration.VERTICAL))

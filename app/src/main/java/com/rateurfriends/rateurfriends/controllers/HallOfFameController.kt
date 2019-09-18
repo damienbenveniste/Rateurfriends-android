@@ -76,6 +76,8 @@ class HallOfFameController(val fragment: HallOfFameFragment) {
         val descendingDirectionState = fragment.descendingDirectionButton!!.isChecked
         val byCategoryState = fragment.byCategoryButton!!.isChecked
 
+        fragment.progressLayout!!.visibility = View.VISIBLE
+
         fragment.mainLayout!!.removeAllViews()
 
 
@@ -87,6 +89,8 @@ class HallOfFameController(val fragment: HallOfFameFragment) {
                         orderCountByState,
                         descendingDirectionState,
                         locationState) { category, categoryList ->
+
+                    fragment.progressLayout!!.visibility = View.GONE
 
                     val textView = TextView(ContextThemeWrapper(
                             fragment.context,
@@ -119,6 +123,8 @@ class HallOfFameController(val fragment: HallOfFameFragment) {
                         descendingDirectionState,
                         locationState) { userList ->
 
+                    fragment.progressLayout!!.visibility = View.GONE
+
                     val textView = TextView(ContextThemeWrapper(
                             fragment.context,
                             R.style.CategoryTextView)
@@ -146,6 +152,8 @@ class HallOfFameController(val fragment: HallOfFameFragment) {
                         orderCountByState,
                         descendingDirectionState,
                         locationState) { categoryList ->
+
+                    fragment.progressLayout!!.visibility = View.GONE
 
                     val textView = TextView(ContextThemeWrapper(
                             fragment.context,

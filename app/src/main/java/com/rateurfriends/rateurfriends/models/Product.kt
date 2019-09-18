@@ -2,6 +2,14 @@ package com.rateurfriends.rateurfriends.models
 
 class Product(
 
+        val productId: String = "",
+
+        val userId: String = "",
+
+        val price: String = "",
+
+        val timeStamp: Long = System.currentTimeMillis() / 1000L
+
 ) {
 
     companion object {

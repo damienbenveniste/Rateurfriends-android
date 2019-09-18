@@ -8,6 +8,8 @@ import android.content.pm.PackageManager
 import android.os.AsyncTask
 import android.provider.ContactsContract
 import android.telephony.PhoneNumberUtils
+import android.view.View
+import android.widget.FrameLayout
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.rateurfriends.rateurfriends.MainActivity
@@ -21,7 +23,7 @@ import kotlin.collections.ArrayList
 import android.widget.TextView
 
 
-class InviteFriendsController(val activity: Activity) {
+class InviteFriendsController(val activity: Activity, val progressLayout: FrameLayout) {
 
     private val PERMISSION_ALL = 79
     private val PERMISSIONS = arrayOf(
@@ -36,14 +38,19 @@ class InviteFriendsController(val activity: Activity) {
 
     }
 
+    fun removeView(view: View) {
+        view.visibility = View.GONE
+    }
+
     fun requestPermission(map: LinkedHashMap<String, Contact>,
-                                  adapter: AllContactsAdapter) {
+                                  adapter: AllContactsAdapter,
+                          warningLayout: FrameLayout) {
 
 
         if(!hasPermissions(activity, *PERMISSIONS)){
             ActivityCompat.requestPermissions(activity, PERMISSIONS, PERMISSION_ALL)
         } else {
-            getContacts(map, adapter)
+            getContacts(map, adapter, warningLayout)
         }
     }
 
@@ -56,14 +63,15 @@ class InviteFriendsController(val activity: Activity) {
                           permissions: Array<String>,
                           grantResults: IntArray,
                           map: LinkedHashMap<String, Contact>,
-                          adapter: AllContactsAdapter) {
+                          adapter: AllContactsAdapter,
+                          warningLayout: FrameLayout) {
 
         when (requestCode) {
             PERMISSION_ALL -> {
                 if ((grantResults.isNotEmpty() &&
                                 grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
 
-                    getContacts(map, adapter)
+                    getContacts(map, adapter, warningLayout)
 
                 } else {
                     val intent = Intent(activity, MainActivity::class.java)
@@ -77,12 +85,23 @@ class InviteFriendsController(val activity: Activity) {
     }
 
     private fun getContacts(map: LinkedHashMap<String, Contact>,
-                            adapter: AllContactsAdapter) {
+                            adapter: AllContactsAdapter,
+                            warningLayout: FrameLayout) {
+
+        progressLayout.visibility = View.VISIBLE
+        warningLayout.visibility = View.VISIBLE
 
         UserDAO.getInvitedContactsForUser(Globals.getInstance().user!!.userId) {
             val invitedPhoneSet = it.map{ contact -> contact.phoneNumber }.toSet()
             val contentResolver = activity.contentResolver
-            val runner = AsyncTaskRunner(contentResolver, invitedPhoneSet, map, adapter)
+            val runner = AsyncTaskRunner(
+                    contentResolver,
+                    invitedPhoneSet,
+                    map,
+                    adapter,
+                    progressLayout
+            )
+
             runner.execute()
         }
 
@@ -92,7 +111,8 @@ class InviteFriendsController(val activity: Activity) {
             private val contentResolver: ContentResolver,
             private val phoneSet: Set<String>,
             private val contactMap: LinkedHashMap<String, Contact>,
-            private val contactAdapter: AllContactsAdapter
+            private val contactAdapter: AllContactsAdapter,
+            private val progressLayout: FrameLayout
     ): AsyncTask<Void, Int, String>() {
 
         private val CONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI
@@ -153,6 +173,7 @@ class InviteFriendsController(val activity: Activity) {
 
         override fun onProgressUpdate(vararg counter: Int?) {
             super.onProgressUpdate(*counter)
+            progressLayout.visibility = View.GONE
             contactAdapter.notifyDataSetChanged()
 
         }

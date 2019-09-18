@@ -57,6 +57,8 @@ class ProfileFragment : Fragment(),
     val categoryNameList: ArrayList<String> = arrayListOf()
     var categorySearchAdapter: CategorySearchAdapter? = null
 
+    var progressLayout: FrameLayout? = null
+
 
     private var profileController: ProfileController? = null
 
@@ -97,6 +99,7 @@ class ProfileFragment : Fragment(),
         addCategoryEditText = view.findViewById(R.id.ed_category_name) as EditText
         submitCategoryButton = view.findViewById(R.id.bt_submit_category) as Button
         categoryRecyclerView = view.findViewById(R.id.rv_category_search) as RecyclerView
+        progressLayout = view.findViewById(R.id.progress_layout)
 
         photoMenuButton?.setOnClickListener {
             profileController!!.showPictureEditView(editPictureLayout!!)
@@ -138,6 +141,8 @@ class ProfileFragment : Fragment(),
         addCategoryEditText!!.addTextChangedListener(profileController!!.getTextChangedListener())
 
         profileController!!.getCategories(rvCategories!!)
+
+        progressLayout!!.visibility = View.VISIBLE
 
         return view
     }

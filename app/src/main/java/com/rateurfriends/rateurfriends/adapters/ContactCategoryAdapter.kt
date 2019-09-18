@@ -20,6 +20,7 @@ class ContactCategoryAdapter constructor(
         private val userId: String,
         private val categoryList: ArrayList<Category>,
         private val listener: ItemClickListener,
+        private val progressLayout: FrameLayout,
         private val mContext: Context) : RecyclerView.Adapter<ContactCategoryAdapter.CategoryViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
@@ -38,13 +39,17 @@ class ContactCategoryAdapter constructor(
         holder.submitButton.setOnClickListener {
             submitRating(holder.ratingLayout, holder.ratingBar.rating, category, position)
         }
+
+        VoteDAO.getVote(userId, category.userId, category.categoryName) {
+            holder.userVoteTextView.text = "Your vote: %s".format(it.getRatingStars())
+        }
     }
 
-    fun removeLayout(layout: FrameLayout) {
+    private fun removeLayout(layout: FrameLayout) {
         layout.visibility = View.GONE
     }
 
-    fun updateCategory(category: Category, position: Int) {
+    private fun updateCategory(category: Category, position: Int) {
         CategoryDAO.getCategoryForUser(category.userId, category.categoryName) {
             document ->
             if (document.exists()) {
@@ -55,7 +60,9 @@ class ContactCategoryAdapter constructor(
         }
     }
 
-    fun submitRating(layout: FrameLayout, rating: Float, category: Category, position: Int ) {
+    private fun submitRating(layout: FrameLayout, rating: Float, category: Category, position: Int ) {
+
+        progressLayout.visibility = View.VISIBLE
         VoteDAO.updateVoteForUser(
                 rating.toInt(),
                 userId,
@@ -63,6 +70,7 @@ class ContactCategoryAdapter constructor(
                 category.categoryName
         ) {
             updateCategory(category, position)
+            progressLayout.visibility = View.GONE
         }
         removeLayout(layout)
     }
@@ -81,6 +89,7 @@ class ContactCategoryAdapter constructor(
         internal var cancelButton: AppCompatButton
         internal var submitButton: AppCompatButton
         internal var ratingBar: RatingBar
+        internal var userVoteTextView: TextView
 
         init {
             categoryNameTextView = itemView.findViewById(R.id.tv_category_name) as TextView
@@ -91,6 +100,7 @@ class ContactCategoryAdapter constructor(
             cancelButton = itemView.findViewById(R.id.bt_cancel) as AppCompatButton
             submitButton = itemView.findViewById(R.id.bt_submit) as AppCompatButton
             ratingBar = itemView.findViewById(R.id.rating_bar) as RatingBar
+            userVoteTextView = itemView.findViewById(R.id.tv_user_vote) as TextView
 
             itemView.setOnClickListener {
                 listener.onItemClicked(categoryList[adapterPosition], adapterPosition, ratingLayout)

@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,6 +36,7 @@ class MarketPlaceFragment : Fragment(),
     var productRecyclerView: RecyclerView? = null
     var spareStarTextView: TextView? = null
     var spareCategoryTextView: TextView? = null
+    var progressLayout: FrameLayout? = null
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -49,9 +51,12 @@ class MarketPlaceFragment : Fragment(),
         productRecyclerView = view.findViewById(R.id.products) as RecyclerView
         spareStarTextView = view.findViewById(R.id.tv_spare_stars) as TextView
         spareCategoryTextView = view.findViewById(R.id.tv_spare_categories) as TextView
+        progressLayout = view.findViewById(R.id.progress_layout)
 
         marketPlaceController!!.setupBillingClient()
         marketPlaceController!!.setupTextViews()
+
+        progressLayout!!.visibility = View.VISIBLE
 
         return view
     }

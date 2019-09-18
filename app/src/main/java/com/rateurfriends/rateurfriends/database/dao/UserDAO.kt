@@ -31,7 +31,7 @@ class UserDAO {
         fun transferStarsForUser(userId: String,
                                  starIncrement: Int,
                                  category: Category,
-                                 callback: () -> Unit) {
+                                 onSuccess: () -> Unit, onFailure: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
             val categoryRef = db
@@ -90,12 +90,6 @@ class UserDAO {
 
                     if (user.country.isNotEmpty()) {
 
-                        val countryUserRef = db
-                                .collection("Country")
-                                .document(user.country)
-                                .collection("User")
-                                .document(userId)
-
                         val countryCategoryRef = db
                                 .collection("Country")
                                 .document(user.country)
@@ -104,31 +98,21 @@ class UserDAO {
                                 .collection("User")
                                 .document(user.userId)
 
-                        transaction.update(countryUserRef,
-                                mapOf(
-                                        "totalStarNumber" to FieldValue.increment(
-                                                starIncrement.toLong()),
-                                        "meanStarNumber" to totalMeanStarNumber,
-                                        "spareStars" to newSpareStars
-
-                                ))
-
                         transaction.update(countryCategoryRef,
                                 mapOf(
                                         "starNumber" to FieldValue.increment(
                                                 starIncrement.toLong()),
                                         "meanStarNumber" to meanStarNumber
                                 ))
-
-
                     }
                 }
-
+                null
             }.addOnSuccessListener {
-                callback()
+                onSuccess()
             }.addOnFailureListener {
                 println("Exception")
                 println(it)
+                onFailure()
             }
 
         }
@@ -155,25 +139,19 @@ class UserDAO {
 
             batch.set(userRef, user)
 
-            if (user.country.isNotEmpty()) {
-                val countryUserRef = db
-                        .collection("Country")
-                        .document(user.country)
-                        .collection("User")
-                        .document(user.userId)
-
-                batch.set(countryUserRef, user)
-            }
-
             categoryList.forEach {
                 batch.set(refAttribute.document(it.categoryName), it)
-                batch.set(
-                        refCategory
+                batch.set(refCategory
                                 .document(it.categoryName)
                                 .collection("User")
-                                .document(user.userId),
-                        it
+                                .document(user.userId), it)
+
+                batch.set(
+                        refCategory.document(it.categoryName),
+                        mapOf( "count" to FieldValue.increment(1)),
+                        SetOptions.merge()
                 )
+
                 if (user.country.isNotEmpty()) {
                     val countryCategoryRef = db
                             .collection("Country")
@@ -184,8 +162,18 @@ class UserDAO {
                             .document(user.userId)
 
                     batch.set(countryCategoryRef, it)
+
+                    batch.set(
+                            db.collection("Country")
+                                    .document(user.country)
+                                    .collection("Category")
+                                    .document(it.categoryName),
+                            mapOf( "count" to FieldValue.increment(1)),
+                            SetOptions.merge()
+                    )
                 }
             }
+
 
             batch.commit()
                     .addOnSuccessListener { callback() }
@@ -247,6 +235,23 @@ class UserDAO {
                     .collection("Contact")
                     .document(contact.userId)
                     .set(contact)
+
+            val user = Globals.getInstance().user
+
+            if (user != null) {
+
+                val userContact = Contact(
+                        phoneName="",
+                        phoneNumber=user.phoneNumber,
+                        userId=user.userId
+                )
+
+                db.collection("UserAttribute")
+                        .document(contact.userId)
+                        .collection("Contact")
+                        .document(userContact.userId)
+                        .set(userContact)
+            }
         }
 
         fun insertContactListForUser(contactList: List<Contact>, userId: String) {
@@ -304,20 +309,13 @@ class UserDAO {
                     .document(userId)
 
             db.runTransaction {
+
                 val user = it.get(userRef).toObject(User::class.java)
-                it.update(userRef, params)
 
-                val country = params["country"] as String
-                if (country.isNotEmpty()) {
-                    val countryUserRef = db.collection("Country")
-                            .document(country)
-                            .collection("User")
-                            .document(userId)
+                if (user != null) {
 
-                    it.update(countryUserRef, params)
-
+                    it.update(userRef, params)
                 }
-
                 user
             }.addOnSuccessListener {
                 callback(it)
@@ -340,9 +338,8 @@ class UserDAO {
 
             if (local && country != null && country.isNotEmpty()) {
 
-                db.collection("Country")
-                        .document(country)
-                        .collection("User")
+                db.collection("User")
+                        .whereEqualTo("country", country)
                         .orderBy(orderBy, direction)
                         .limit(100)
                         .get()
@@ -351,6 +348,7 @@ class UserDAO {
                                 callback(it.map{u -> u.toObject(User::class.java)!!})
                             }
                         }
+
             } else {
 
                 db.collection("User")

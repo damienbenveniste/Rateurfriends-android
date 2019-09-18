@@ -3,6 +3,7 @@ package com.rateurfriends.rateurfriends.controllers
 import android.app.SearchManager
 import android.content.Context
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
@@ -19,6 +20,7 @@ class SearchController(val fragment: SearchFragment) {
 
     fun getContacts() {
 
+        fragment.progressLayout!!.visibility = View.VISIBLE
         contactAdapter = ContactProfileAdapter(contactList, fragment)
         fragment.rvContacts!!.adapter = contactAdapter
         fragment.rvContacts!!.layoutManager = LinearLayoutManager(fragment.activity)
@@ -29,6 +31,7 @@ class SearchController(val fragment: SearchFragment) {
                 contactList.add(doc.toObject(Contact::class.java))
             }
             contactAdapter!!.notifyDataSetChanged()
+            fragment.progressLayout!!.visibility = View.GONE
 
         }
     }

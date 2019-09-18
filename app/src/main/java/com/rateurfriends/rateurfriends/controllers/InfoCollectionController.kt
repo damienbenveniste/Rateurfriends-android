@@ -60,16 +60,13 @@ class InfoCollectionController(val activity: Activity) {
         val userId = currentUser.uid
         val userName = currentUser.displayName
         val phoneNumber = currentUser.phoneNumber
-        val country = Utils.getCountryBasedOnSimCardOrNetwork(activity)
 
         if (userName != null && phoneNumber != null) {
             val map = mapOf(
-                    "userName" to userName,
-                    "country" to country
+                    "userName" to userName
             )
             UserDAO.updateUser(userId, map) {
                 it.userName = userName
-                it.country = country
                 Globals.getInstance().user = it
                 callback()
             }

@@ -1,21 +1,17 @@
 package com.rateurfriends.rateurfriends
 
-import android.content.Context
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
+import android.widget.FrameLayout
 import android.widget.TextView
-import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.rateurfriends.rateurfriends.adapters.AllContactsAdapter
 import com.rateurfriends.rateurfriends.controllers.InviteFriendsController
-import com.rateurfriends.rateurfriends.controllers.InviteFriendsMenuController
 import com.rateurfriends.rateurfriends.models.Contact
 
 class InviteFriendsMenuActivity : AppCompatActivity() {
@@ -23,6 +19,9 @@ class InviteFriendsMenuActivity : AppCompatActivity() {
     private var rvContacts: RecyclerView? = null
     private var inviteFriendsController: InviteFriendsController? = null
     private var spareCategoriesTextView: TextView? = null
+    private var progressLayout: FrameLayout? = null
+    private var warningLayout: FrameLayout? = null
+    private var confirmButton: MaterialButton? = null
 
     private val contactMap: LinkedHashMap<String, Contact> = linkedMapOf()
     private var contactAdapter: AllContactsAdapter? = null
@@ -30,7 +29,6 @@ class InviteFriendsMenuActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_invite_friends)
-        val toolbar: Toolbar = findViewById(R.id.toolbar_main)
 
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
@@ -41,6 +39,14 @@ class InviteFriendsMenuActivity : AppCompatActivity() {
 
         rvContacts = findViewById(R.id.rvContacts)
         spareCategoriesTextView = findViewById(R.id.tv_spare_categories)
+        progressLayout = findViewById(R.id.progress_layout) as FrameLayout
+        warningLayout = findViewById(R.id.layout_warning)
+        confirmButton = findViewById(R.id.bt_confirm)
+
+        confirmButton!!.setOnClickListener {
+            inviteFriendsController!!.removeView(warningLayout!!)
+        }
+
         rvContacts!!.addItemDecoration(
                 DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
@@ -49,11 +55,12 @@ class InviteFriendsMenuActivity : AppCompatActivity() {
         rvContacts!!.layoutManager = LinearLayoutManager(this)
 
 
-        inviteFriendsController = InviteFriendsController(this)
+        inviteFriendsController = InviteFriendsController(this, progressLayout!!)
 
         inviteFriendsController!!.requestPermission(
                 contactMap,
-                contactAdapter!!)
+                contactAdapter!!,
+                warningLayout!!)
 
         inviteFriendsController!!.setTextView(spareCategoriesTextView!!)
 
@@ -69,7 +76,8 @@ class InviteFriendsMenuActivity : AppCompatActivity() {
                 permissions,
                 grantResults,
                 contactMap,
-                contactAdapter!!
+                contactAdapter!!,
+                warningLayout!!
         )
     }
 

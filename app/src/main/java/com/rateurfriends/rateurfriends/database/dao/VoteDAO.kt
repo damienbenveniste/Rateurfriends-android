@@ -6,7 +6,9 @@ import com.google.firebase.database.*
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.rateurfriends.rateurfriends.helperClasses.Globals
 import com.rateurfriends.rateurfriends.models.Category
+import com.rateurfriends.rateurfriends.models.Feed
 import com.rateurfriends.rateurfriends.models.Vote
 import com.rateurfriends.rateurfriends.models.User
 
@@ -35,7 +37,13 @@ class VoteDAO {
                               categoryName: String, callback: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
-//            val voteId = getVoteId(userId, contactId, category)
+
+            if (userId.isEmpty() || contactId.isEmpty() || categoryName.isEmpty()) {
+                println(userId)
+                println(contactId)
+                println(categoryName)
+                return
+            }
 
             val voteRef = db.collection("Vote")
                     .document(userId)
@@ -71,6 +79,16 @@ class VoteDAO {
                     val category = snapshotCategory.toObject(Category::class.java)!!
                     val contact = snapshotUser.toObject(User::class.java)!!
 
+                    val countryCategoryRef = db
+                            .collection("Country")
+                            .document(contact.country)
+                            .collection("Category")
+                            .document(categoryName)
+                            .collection("User")
+                            .document(contact.userId)
+
+                    val snapshotCountry = transaction.get(countryCategoryRef)
+
                     if (previousRating != null) {
 
                         val increment = rating - previousRating
@@ -102,33 +120,15 @@ class VoteDAO {
 
                         if (contact.country.isNotEmpty()) {
 
-                            val countryUserRef = db
-                                    .collection("Country")
-                                    .document(contact.country)
-                                    .collection("User")
-                                    .document(contact.userId)
+                            if (snapshotCountry.exists()) {
 
-                            val countryCategoryRef = db
-                                    .collection("Country")
-                                    .document(contact.country)
-                                    .collection("Category")
-                                    .document(categoryName)
-                                    .collection("User")
-                                    .document(contact.userId)
-
-                            transaction.update(countryUserRef,
-                                    mapOf(
-                                            "totalStarNumber" to FieldValue.increment(
-                                                    increment.toLong()),
-                                            "meanStarNumber" to totalMeanStarNumber
-                                    ))
-
-                            transaction.update(countryCategoryRef,
-                                    mapOf(
-                                            "starNumber" to FieldValue.increment(
-                                                    increment.toLong()),
-                                            "meanStarNumber" to meanStarNumber
-                                    ))
+                                transaction.update(countryCategoryRef,
+                                        mapOf(
+                                                "starNumber" to FieldValue.increment(
+                                                        increment.toLong()),
+                                                "meanStarNumber" to meanStarNumber
+                                        ))
+                            }
 
 
                         }
@@ -171,47 +171,45 @@ class VoteDAO {
                                         "meanStarNumber" to totalMeanStarNumber
                                 ))
 
+                        val user = Globals.getInstance().user
+                        if (user != null) {
+
+                            val feedId = contactId + "_" + (System.currentTimeMillis() / 1000L).toString()
+
+                            val feed = Feed(
+                                    feedId = feedId,
+                                    userId = user.userId,
+                                    userName = user.userName,
+                                    categoryName = category.categoryName,
+                                    rating = rating,
+                                    feedType = "vote_added"
+                            )
+                            val feedRef = db.collection("UserAttribute")
+                                    .document(contactId)
+                                    .collection("Feed")
+                                    .document(feed.feedId)
+
+                            transaction.set(feedRef, feed)
+                        }
+
+
                         if (contact.country.isNotEmpty()) {
 
-                            val countryUserRef = db
-                                    .collection("Country")
-                                    .document(contact.country)
-                                    .collection("User")
-                                    .document(contact.userId)
-
-                            val countryCategoryRef = db
-                                    .collection("Country")
-                                    .document(contact.country)
-                                    .collection("Category")
-                                    .document(categoryName)
-                                    .collection("User")
-                                    .document(contact.userId)
-
-                            println(userId)
-                            println(contactId)
-                            println(categoryName)
-                            println(contact.country)
-
-                            transaction.update(countryUserRef,
-                                    mapOf(
-                                            "totalStarNumber" to FieldValue.increment(
-                                                    increment.toLong()),
-                                            "totalVoteNumber" to FieldValue.increment(1),
-                                            "meanStarNumber" to totalMeanStarNumber
-                                    ))
-
-                            transaction.update(countryCategoryRef,
-                                    mapOf(
-                                            "starNumber" to FieldValue.increment(
-                                                    increment.toLong()),
-                                            "voteNumber" to FieldValue.increment(1),
-                                            "meanStarNumber" to meanStarNumber
-                                    ))
+                            if (snapshotCountry.exists()) {
+                                transaction.update(countryCategoryRef,
+                                        mapOf(
+                                                "starNumber" to FieldValue.increment(
+                                                        increment.toLong()),
+                                                "voteNumber" to FieldValue.increment(1),
+                                                "meanStarNumber" to meanStarNumber
+                                        ))
+                            }
                         }
                     }
 
                 }
 
+                null
             }.addOnSuccessListener {
                 callback()
             }.addOnFailureListener {
@@ -221,7 +219,33 @@ class VoteDAO {
 
 
         }
+
+        fun getVote(userId: String,
+                    contactId: String,
+                    categoryName: String,
+                    callback: (Vote) -> Unit) {
+
+            val db = FirebaseFirestore.getInstance()
+
+            if (userId.isNotEmpty() && contactId.isNotEmpty() && categoryName.isNotEmpty()) {
+
+                db.collection("Vote")
+                        .document(userId)
+                        .collection(contactId)
+                        .document(categoryName)
+                        .get()
+                        .addOnSuccessListener {
+                            if (it.exists() && it != null) {
+                                callback(it.toObject(Vote::class.java)!!)
+                            }
+                        }
+            }
+
+
+
+        }
     }
+
 
 
 }

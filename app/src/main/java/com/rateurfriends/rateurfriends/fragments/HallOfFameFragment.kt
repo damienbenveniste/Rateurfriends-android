@@ -52,6 +52,7 @@ class HallOfFameFragment : Fragment(),
     var chipGroup: ChipGroup? = null
     var filterLayout: FrameLayout? = null
     var mainLayout: LinearLayout? = null
+    var progressLayout: FrameLayout? = null
 
 
     private var filterViewButton: MaterialButton? = null
@@ -87,6 +88,7 @@ class HallOfFameFragment : Fragment(),
         chipGroup = view.findViewById(R.id.chip_group) as ChipGroup
         filterLayout = view.findViewById(R.id.layout_filter) as FrameLayout
         filterViewButton = view.findViewById(R.id.bt_filter_view) as MaterialButton
+        progressLayout = view.findViewById(R.id.progress_layout)
 
         filterViewButton!!.setOnClickListener{
             hallOfFameController!!.showFilterView(filterLayout!!)

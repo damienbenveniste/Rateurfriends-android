@@ -2,6 +2,7 @@ package com.rateurfriends.rateurfriends.controllers
 
 import android.app.Activity
 import android.content.Context
+import android.view.View
 //import android.support.v4.app.Fragment
 //import android.support.v7.widget.LinearLayoutManager
 //import android.support.v7.widget.RecyclerView
@@ -53,7 +54,7 @@ class ContactProfileController(
 
     fun getCategories(contact: User, rvCategories: RecyclerView) {
         val userId = contact.userId
-        println(userId)
+        activity.progressLayout!!.visibility = View.VISIBLE
         CategoryDAO.getCategoriesForUser(userId) {
             documents ->
             if (!documents.isEmpty) {
@@ -61,7 +62,7 @@ class ContactProfileController(
                 for (doc in documents) {
                     val category = doc.toObject(Category::class.java)
                     if (category.publicVisibility) {
-                        categoryList.add(category!!)
+                        categoryList.add(category)
                     }
                 }
 
@@ -69,11 +70,13 @@ class ContactProfileController(
                         FirebaseAuth.getInstance().currentUser!!.uid,
                         categoryList,
                         activity,
+                        activity.progressLayout!!,
                         activity
                 )
 
                 rvCategories.adapter = categoriesAdapter
                 rvCategories.layoutManager = LinearLayoutManager(activity)
+                activity.progressLayout!!.visibility = View.GONE
             }
         }
 

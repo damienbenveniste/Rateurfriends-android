@@ -1,9 +1,11 @@
 package com.rateurfriends.rateurfriends.controllers
 
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.billingclient.api.*
 import com.google.firebase.auth.FirebaseAuth
 import com.rateurfriends.rateurfriends.adapters.ProductsAdapter
+import com.rateurfriends.rateurfriends.database.dao.PurchaseDAO
 import com.rateurfriends.rateurfriends.database.dao.UserDAO
 import com.rateurfriends.rateurfriends.fragments.MarketPlaceFragment
 import com.rateurfriends.rateurfriends.helperClasses.Globals
@@ -13,6 +15,7 @@ class MarketPlaceController(var fragment: MarketPlaceFragment) {
 
     private lateinit var billingClient: BillingClient
     private lateinit var productsAdapter: ProductsAdapter
+    private var skuMap: Map<String, SkuDetails>? = null
 
     fun setupBillingClient() {
         billingClient = BillingClient
@@ -85,19 +88,23 @@ class MarketPlaceController(var fragment: MarketPlaceFragment) {
             billingClient.launchBillingFlow(fragment.activity, billingFlowParams)
         }
 
-        fragment.productRecyclerView!!.setAdapter(productsAdapter)
+        fragment.productRecyclerView!!.adapter = productsAdapter
         fragment.productRecyclerView!!.layoutManager = LinearLayoutManager(fragment.activity)
+
+        fragment.progressLayout!!.visibility = View.GONE
     }
 
     private fun reorderList(list: List<SkuDetails>): List<SkuDetails> {
-        val map = list.map{ it.sku to it }.toMap()
-        return Product.skuList.map{ map.getValue(it) }
+        skuMap = list.map{ it.sku to it }.toMap()
+        return Product.skuList.map{ skuMap!!.getValue(it) }
     }
 
     fun onPurchasesUpdated(billingResult: BillingResult?,
                            purchases: MutableList<Purchase>?) {
 
         val purchase = purchases?.first()
+
+        fragment.progressLayout!!.visibility = View.VISIBLE
 
         if (billingResult!!.responseCode == BillingClient.BillingResponseCode.OK && purchase?.purchaseToken != null) {
 
@@ -116,7 +123,9 @@ class MarketPlaceController(var fragment: MarketPlaceFragment) {
                                 Globals.getInstance().user!!.spareStars
                         )
                     }
+                    fragment.progressLayout!!.visibility = View.GONE
                 }
+
             }
             else if (sku in Product.spareCategoriesMap.keys) {
                 UserDAO.incrementSpareCategoriesForUser(
@@ -130,8 +139,15 @@ class MarketPlaceController(var fragment: MarketPlaceFragment) {
                                 Globals.getInstance().user!!.spareCategories
                         )
                     }
+                    fragment.progressLayout!!.visibility = View.GONE
                 }
             }
+            val product = Product(
+                    userId = userId,
+                    productId = sku,
+                    price=if (skuMap != null) skuMap!!.getValue(sku).price else ""
+            )
+            PurchaseDAO.capturePurchase(product)
             allowMultiplePurchases(purchases)
         }
     }
