@@ -81,7 +81,9 @@ class InfoCollectionController(val activity: Activity) {
         val userName = currentUser.displayName
         val phoneNumber = currentUser.phoneNumber
         val country = Utils.getCountryBasedOnSimCardOrNetwork(activity).toLowerCase()
-        val categoryList = Category.initialCategories.map{Category(it.toLowerCase(), userId)}
+        val categoryList = Category.initialCategories.map{
+            Category(activity.getString(it).toLowerCase(), userId)
+        }
 
         if (userName != null && phoneNumber != null) {
             val user = User(userName, phoneNumber, userId, country=country)

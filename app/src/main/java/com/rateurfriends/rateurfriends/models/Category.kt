@@ -1,7 +1,6 @@
 package com.rateurfriends.rateurfriends.models
 
 
-import android.content.res.Resources
 import com.google.firebase.firestore.Exclude
 import com.rateurfriends.rateurfriends.R
 import com.rateurfriends.rateurfriends.database.dao.CategoryDAO
@@ -51,13 +50,13 @@ class Category(
 
         @get: Exclude
         val initialCategories = arrayOf(
-                Resources.getSystem().getString(R.string.initial_category_honest),
-                Resources.getSystem().getString(R.string.initial_category_loyal),
-                Resources.getSystem().getString(R.string.initial_category_smart),
-                Resources.getSystem().getString(R.string.initial_category_attractive),
-                Resources.getSystem().getString(R.string.initial_category_authentic),
-                Resources.getSystem().getString(R.string.initial_category_generous),
-                Resources.getSystem().getString(R.string.initial_category_kind)
+                R.string.initial_category_honest,
+                R.string.initial_category_loyal,
+                R.string.initial_category_smart,
+                R.string.initial_category_attractive,
+                R.string.initial_category_authentic,
+                R.string.initial_category_generous,
+                R.string.initial_category_kind
         )
     }
 
