@@ -76,7 +76,6 @@ class InviteFriendsActivity : AppCompatActivity() {
 
         inviteFriendsController!!.handlePermissions(
                 requestCode,
-                permissions,
                 grantResults,
                 contactMap,
                 contactAdapter!!,

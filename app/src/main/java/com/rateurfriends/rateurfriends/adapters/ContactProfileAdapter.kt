@@ -41,8 +41,14 @@ class ContactProfileAdapter constructor(
 
             }
             holder.startRatingView.rating = user.meanStarNumber
-            holder.starNumberTextView.text = "★%d".format(user.totalStarNumber)
-            holder.starMeanTextView.text = "%.1f".format(user.meanStarNumber)
+            holder.starNumberTextView.text = fragment
+                    .getString(R.string.star_number_format)
+                    .format(user.totalStarNumber)
+
+            holder.starMeanTextView.text = fragment
+                    .getString(R.string.mean_star_format)
+                    .format(user.meanStarNumber)
+
             holder.levelView.levelText = user.level
 
         } else {
@@ -60,8 +66,14 @@ class ContactProfileAdapter constructor(
 
                 }
                 holder.startRatingView.rating = it.meanStarNumber
-                holder.starNumberTextView.text = "★%d".format(it.totalStarNumber)
-                holder.starMeanTextView.text = "%.1f".format(it.meanStarNumber)
+                holder.starNumberTextView.text =  fragment
+                        .getString(R.string.star_number_format)
+                        .format(it.totalStarNumber)
+
+                holder.starMeanTextView.text = fragment
+                        .getString(R.string.mean_star_format)
+                        .format(it.meanStarNumber)
+
                 holder.levelView.levelText = it.level
                 userMap[it.userId] = it
             }
@@ -72,8 +84,6 @@ class ContactProfileAdapter constructor(
                 holder.profilePictureImageView,
                 fragment.context!!
         )
-
-
     }
 
     inner class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

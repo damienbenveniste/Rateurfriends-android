@@ -53,7 +53,7 @@ class FeedFragment : Fragment(),
                               savedInstanceState: Bundle?): View? {
 
         if (listener != null) {
-            listener!!.onFragmentInteraction("Feed");
+            listener!!.onFragmentInteraction(this.getString(R.string.feed_title));
         }
 
         feedController = FeedController(this)
@@ -117,7 +117,6 @@ class FeedFragment : Fragment(),
      * for more information.
      */
     interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         fun onFragmentInteraction(title: String)
     }
 
@@ -126,7 +125,6 @@ class FeedFragment : Fragment(),
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance() = FeedFragment()
     }

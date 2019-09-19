@@ -4,8 +4,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <!--android:background="@drawable/shape_test"-->
-
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,14 +17,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
-        <!--<androidx.appcompat.widget.AppCompatButton-->
-            <!--android:id="@+id/bt_minus"-->
-            <!--android:layout_marginLeft="10dp"-->
-            <!--android:layout_marginRight="10dp"-->
-            <!--android:layout_width="30dp"-->
-            <!--android:layout_height="30dp"-->
-            <!--android:background="@drawable/ic_remove_white_24dp"/>-->
 
         <androidx.appcompat.widget.AppCompatButton
             android:clickable="true"

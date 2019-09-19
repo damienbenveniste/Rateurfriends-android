@@ -1,45 +1,9 @@
 <resources>
+
     <string name="app_name">RateUrFriends</string>
-    <string name="first_time_login">first_time_login</string>
-    <string name="first_invite">first_invite</string>
-    <string name="information_collected">information_collected</string>
-
-    <string name="unknown_error">There has been an unknown error</string>
-    <string name="network_error">
-        The action could not be processed. Please check your network
-    </string>
-    <string name="information_not_saved">
-        There has been an error. The information could not be saved
-    </string>
-
-    <string name="feed_text">
-        <![CDATA[
-     Congratulate <b>%s</b> for reaching Level <b>%d</b>. This level requires <b>%d</b> stars.
-        ]]>
-    </string>
-    "Congratulate %s for reaching Level %d. This level necessites %d stars."
-
-    <!--
-    This string is used for square devices and overridden by hello_world in
-    values-round/strings.xml for round devices.
-    -->
-    <string name="hello_world">Hello Square World!</string>
-    <string name="email">Email</string>
-    <string name="password">Password</string>
-    <string name="first_name">First Name</string>
-    <string name="name">Name</string>
-    <string name="user_name">Username</string>
-    <string name="last_name">Last Name</string>
-    <string name="login_title">Login</string>
-    <string name="phone_number">Phone Number</string>
-    <string name="create_act">Create Account</string>
-
-    <string name="no_camera_use">You will not be able to take your picture</string>
-    <string name="no_upload_use">You will not be able to upload a picture</string>
-
-    <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
-    <string name="facebook_application_id" translatable="false">1282663951893271</string>
-    <string name="facebook_login_protocol_scheme" translatable="false">fb1282663951893271</string>
+    <string name="shared_preference_file">PrefFile</string>
+    <string name="mean_star_format">%.1f</string>
+    <string name="star_number_format">★%d</string>
 
     <string name="title_hall">Fame</string>
     <string name="title_feed">Feed</string>
@@ -47,29 +11,164 @@
     <string name="title_market_place">Market</string>
     <string name="title_search">Contacts</string>
 
-    <string name="shared_preference_file">PrefFile</string>
-    <string name="first_run_key">firstrun</string>
 
-    <string name="component_one">Custom Component 1</string>
+    <!--Login Activity-->
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="loading_text">Loading ...</string>
-    <string name="search_hint">Search Name or Age</string>
-    <string name="title_activity_test">TestActivity</string>
+    <string name="unknown_error">There has been an unknown error</string>
+    <string name="network_error">The action could not be processed. Please check your network</string>
+    <string name="first_time_login">first_time_login</string>
+    <string name="information_collected">information_collected</string>
+
+    <!--Login Activity-->
+
+
+    <!--Information Collection -->
+
+    <string name="information_not_saved">There has been an error. The information could not be saved</string>
+    <string name="info_collection_username_hint">Enter your Name</string>
+    <string name="info_collection_next_button">Next</string>
+
+    <string name="initial_category_honest">Honest</string>
+    <string name="initial_category_loyal">Loyal</string>
+    <string name="initial_category_smart">Smart</string>
+    <string name="initial_category_attractive">Attractive</string>
+    <string name="initial_category_authentic">Authentic</string>
+    <string name="initial_category_generous">Generous</string>
+    <string name="initial_category_kind">Kind</string>
+
+    <!--Information Collection -->
+
+
+    <!--Invite Friends Activity-->
+
+    <string name="first_invite">first_invite</string>
+    <string name="invite_friends_spare_qualities">Spare Qualities: %d</string>
+    <string name="invite_friends_explanation">Invite your friends and get additional qualities</string>
+    <string name="invite_friends_sms_warning">The invitations with be sent by SMS. Additional charge may apply.</string>
+    <string name="invite_friends_understood_button">Understood</string>
+    <string name="invite_friends_next_button">Next</string>
+
+    <string name="invite_friends_first_invite_message">
+         "Hey, I started to use this fun new app RateUrFriends! Join me there\n\nAndroid: https://rateurfriends.com/android"
+    </string>
+
+    <string name="invite_friends_second_invite_message">
+         "Just a reminder, I started to use RateUrFriends! Join me there\n\nAndroid: https://rateurfriends.com/android"
+    </string>
+
+    <!--Invite Friends Activity-->
+
+    <!--Main Activity-->
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+    <string name="navigation_drawer_invite_friends">Invite your Friends</string>
+    <string name="navigation_drawer_signout">Sign Out</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
-    <string name="menu_tools">Tools</string>
-    <string name="menu_share">Share</string>
-    <string name="menu_send">Send</string>
+
+    <!--Main Activity-->
+
+    <!--Profile Fragment-->
+
+    <string name="profile_title">Profile</string>
+    <string name="profile_spare_stars_text_view">Spare Stars: %d</string>
+    <string name="profile_spare_categories_text_view">Spare Qualities: %d</string>
+    <string name="profile_level_text_view">Level %d</string>
+    <string name="profile_add_quality_button">Add Quality</string>
+    <string name="profile_search_quality_hint">Create or Search a Quality</string>
+    <string name="profile_take_picture_button">Picture</string>
+    <string name="profile_upload_picture_button">Upload</string>
+    <string name="no_camera_use">You will not be able to take your picture</string>
+    <string name="no_upload_use">You will not be able to upload a picture</string>
+    <string name="profile_category_public">Public</string>
+    <string name="chooser_select_an_image">"Select an image"</string>
+
+    <!--Profile Fragment-->
+
+
+    <!--Search Fragment-->
+
+    <string name="search_title">Your Contacts</string>
+
+    <!--Search Fragment-->
+
+
+    <!--Market Place Fragment-->
+
+    <string name="market_place_title">Market Place</string>
+    <string name="market_place_spare_stars_text_view">Spare Stars: %d</string>
+    <string name="market_place_spare_categories_text_view">Spare Qualities: %d</string>
+
+    <!--Market Place Fragment-->
+
+
+    <!--Feed Fragment-->
+
+    <string name="feed_title">Feed</string>
+    <string name="feed_switch_on">Feed</string>
+    <string name="feed_switch_off">Feed</string>
+
+    <string name="feed_level_passed">Level Passed!</string>
+    <string name="feed_more_stars">More Stars!</string>
+    <string name="feed_one_more_quality">One More Quality!</string>
+
+    <string name="feed_level_passed_message">
+        <![CDATA[
+     Congratulate <b>%s</b> for reaching Level <b>%d</b>. This level requires <b>%d</b> stars.
+        ]]>
+    </string>
+
+    <string name="feed_more_stars_message">
+        <![CDATA[
+     A user rated you <b>%d</b> stars on the <b>%s</b> quality.
+        ]]>
+    </string>
+
+    <string name="feed_one_more_quality_message">
+        <![CDATA[
+     <b>%s</b> added the <b>%s</b> quality. You can rate this quality now.
+        ]]>
+    </string>
+
+    <!--Feed Fragment-->
+
+
+    <!--Hall of Fame fragment-->
+
+    <string name="hall_of_fame_title">Hall of Fame</string>
+    <string name="hall_of_fame_all_users_text_view">All users</string>
+    <string name="hall_of_fame_filter_button">Filter</string>
+    <string name="hall_of_fame_search_hint">Search a Quality</string>
+    <string name="hall_of_fame_switch_local_text">Show for</string>
+    <string name="hall_of_fame_switch_local_text_on">Local Only</string>
+    <string name="hall_of_fame_switch_local_text_off">All</string>
+    <string name="hall_of_fame_switch_average_text">Order By</string>
+    <string name="hall_of_fame_switch_average_text_on">Star Count</string>
+    <string name="hall_of_fame_switch_average_text_off">Average</string>
+    <string name="hall_of_fame_switch_direction_text">Direction</string>
+    <string name="hall_of_fame_switch_direction_text_on">High to Low</string>
+    <string name="hall_of_fame_switch_direction_text_off">Low to High</string>
+    <string name="hall_of_fame_switch_category_text">Filter</string>
+    <string name="hall_of_fame_switch_category_text_on">By category</string>
+    <string name="hall_of_fame_switch_category_text_off">Overall</string>
+    <string name="hall_of_fame_submit_button">submit</string>
+
+    <!--Hall of Fame fragment-->
+
+    <!--Contact Profile Activity-->
+
+    <string name="contact_profile_level_text_view">Level %d</string>
+    <string name="contact_profile_your_vote">Your vote: %s</string>
+
+
+    <!--Contact Profile Activity-->
+
+
+    <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
+    <string name="facebook_application_id" translatable="false">1282663951893271</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb1282663951893271</string>
+
+
 </resources>
 
 

@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
+import com.rateurfriends.rateurfriends.R
 import com.rateurfriends.rateurfriends.database.dao.PictureDAO
 import com.rateurfriends.rateurfriends.helperClasses.FileChooser
 import java.io.ByteArrayInputStream
@@ -36,34 +37,27 @@ class PictureController(
         fragment.startActivityForResult(intent, TAKE_PHOTO_REQUEST)
     }
 
-    fun handleSamplingAndRotationBitmap(context: Context, selectedImage: Uri): Bitmap {
+    private fun handleSamplingAndRotationBitmap(context: Context, selectedImage: Uri): Bitmap {
         val MAX_HEIGHT = 1024
         val MAX_WIDTH = 1024
 
         // First decode with inJustDecodeBounds=true to check dimensions
         val options = BitmapFactory.Options()
         options.inJustDecodeBounds = true;
-        var imageStream = context.getContentResolver().openInputStream(selectedImage);
+        var imageStream = context.contentResolver.openInputStream(selectedImage);
         BitmapFactory.decodeStream(imageStream, null, options);
-        imageStream.close();
+        imageStream?.close();
 
         // Calculate inSampleSize
         options.inSampleSize = calculateInSampleSize(options, MAX_WIDTH, MAX_HEIGHT);
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
-        imageStream = context.getContentResolver().openInputStream(selectedImage);
+        imageStream = context.contentResolver.openInputStream(selectedImage);
         var img = BitmapFactory.decodeStream(imageStream, null, options);
 
-        img = rotateImageIfRequired(img, selectedImage);
+        img = rotateImageIfRequired(img!!, selectedImage);
         return img;
-    }
-
-    private fun getInputStream(bitmap: Bitmap): ByteArrayInputStream {
-        val bos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
-        val bitmapdata = bos.toByteArray()
-        return ByteArrayInputStream(bitmapdata)
     }
 
     private fun calculateInSampleSize(options: BitmapFactory.Options,
@@ -181,15 +175,14 @@ class PictureController(
     fun getImageChooserView() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
-        fragment.startActivityForResult(Intent.createChooser(intent, "Select an image"), SELECT_AN_IMAGE);
+        fragment.startActivityForResult(Intent.createChooser(
+                intent,
+                fragment.getString(R.string.chooser_select_an_image)
+        ), SELECT_AN_IMAGE);
     }
 
     private fun savePicture(userId: String, bitmap: Bitmap, callback: (Task<Uri>) -> Unit) {
         PictureDAO.saveProfilePictureFromBitmap(userId, bitmap, callback)
-    }
-
-    private fun savePicture(userId: String, filePath: Uri, callback: (Task<Uri>) -> Unit) {
-        PictureDAO.saveProfilePictureFromFile(userId, filePath, callback)
     }
 
     fun populateImageView(imageView: ImageView) {

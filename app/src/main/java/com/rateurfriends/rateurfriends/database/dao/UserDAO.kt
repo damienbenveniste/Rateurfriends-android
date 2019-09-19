@@ -270,7 +270,7 @@ class UserDAO {
                             callback(documents)
                         }
                     }
-                    .addOnFailureListener { exception ->
+                    .addOnFailureListener {
                         println("Failure")
                     }
         }
@@ -345,7 +345,7 @@ class UserDAO {
                         .get()
                         .addOnSuccessListener {
                             if (!it.isEmpty && it != null) {
-                                callback(it.map{u -> u.toObject(User::class.java)!!})
+                                callback(it.map{u -> u.toObject(User::class.java)})
                             }
                         }
 
@@ -357,7 +357,7 @@ class UserDAO {
                         .get()
                         .addOnSuccessListener {
                             if (!it.isEmpty && it != null) {
-                                callback(it.map{u -> u.toObject(User::class.java)!!})
+                                callback(it.map{u -> u.toObject(User::class.java)})
                             }
                         }
 

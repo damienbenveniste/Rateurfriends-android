@@ -74,7 +74,7 @@ class ProfileFragment : Fragment(),
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
 
         if (listener != null) {
-            listener!!.onFragmentInteraction("Profile")
+            listener!!.onFragmentInteraction(this.getString(R.string.profile_title))
         }
 
         profileImageView = view.findViewById(R.id.iv_profile_picture) as ImageView
@@ -165,7 +165,7 @@ class ProfileFragment : Fragment(),
 
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>, grantResults: IntArray) {
-        profileController!!.handlePermission(requestCode, permissions, grantResults)
+        profileController!!.handlePermission(requestCode, grantResults)
     }
 
 
@@ -175,7 +175,8 @@ class ProfileFragment : Fragment(),
             listener = context
         } else {
             throw RuntimeException(context.toString() +
-                    " must implement OnFragmentInteractionListener")
+                    " must implement OnFragmentInteractionListener"
+            )
         }
     }
 

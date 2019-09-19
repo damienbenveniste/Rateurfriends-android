@@ -129,7 +129,7 @@ class HallOfFameController(val fragment: HallOfFameFragment) {
                             fragment.context,
                             R.style.CategoryTextView)
                     )
-                    textView.text = "All users"
+                    textView.text = fragment.getString(R.string.hall_of_fame_all_users_text_view)
 
                     val rvContacts = RecyclerView(fragment.context!!)
                     rvContacts.setHasFixedSize(true)

@@ -55,7 +55,7 @@ class AllContactsAdapter(
         holder.phoneNumberTextView.text = contact.phoneNumber
 
         val unwrappedDrawable = AppCompatResources.getDrawable(mContext, R.drawable.ic_person_black_24dp)!!.mutate()
-        val wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable!!)
+        val wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable)
         val color = Color.argb(255, Random.nextInt(256), Random.nextInt(256), Random.nextInt(256))
         DrawableCompat.setTint(wrappedDrawable, color)
 
@@ -106,16 +106,16 @@ class AllContactsAdapter(
 
         UserDAO.sendInvite(user.userId, contact) {
             Globals.getInstance().user!!.incrementSpareCategories(increment)
-            textView.text = "Spare Qualities: %d".format(user.spareCategories)
+            textView.text = mContext
+                    .getString(R.string.invite_friends_spare_qualities)
+                    .format(user.spareCategories)
         }
     }
 
     private fun resendInvite(contact: Contact) {
         val smsManager = SmsManager.getDefault() as SmsManager
 
-        val text = "Just a reminder, I started to use RateUrFriends! Join me there\n\n" +
-                "Android: https://rateurfriends.com/android\n" +
-                "IPhone: https://rateurfriends.com/iphone"
+        val text = mContext.getString(R.string.invite_friends_second_invite_message)
 
         smsManager.sendTextMessage(
                 contact.phoneNumber,
@@ -151,11 +151,7 @@ class AllContactsAdapter(
                     }
                 }, IntentFilter( "SMS_SENT"))
 
-
-
-        val text = "Hey, I started to use this fun new app RateUrFriends! Join me there\n\n" +
-                "Android: https://rateurfriends.com/android\n" +
-                "IPhone: https://rateurfriends.com/iphone"
+        val text =  mContext.getString(R.string.invite_friends_first_invite_message)
 
         contact.invited = true
         contactMap[contact.phoneNumber] = contact

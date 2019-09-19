@@ -31,14 +31,15 @@ class FeedAdapter(
         when (feed.feedType) {
             "level_passed" -> {
                 holder.levelView.visibility = View.VISIBLE
-                holder.feedTypeTextView.text = "Level Passed!"
+                holder.feedTypeTextView.text = fragment.getString(R.string.feed_level_passed)
 
-                holder.message.text = Html.fromHtml(fragment.context!!.getString(R.string.feed_text)
-                        .format(
-                                feed.userName.capitalize(),
-                                feed.levelNumber(),
-                                feed.getNearestStarThreshold()
-                        )
+                holder.message.text = Html.fromHtml(
+                        fragment.getString(R.string.feed_level_passed_message)
+                                .format(
+                                        feed.userName.capitalize(),
+                                        feed.levelNumber(),
+                                        feed.getNearestStarThreshold()
+                                )
                 )
 
                 holder.levelView.levelText = feed.level
@@ -53,14 +54,15 @@ class FeedAdapter(
             "" -> {
 
                 holder.levelView.visibility = View.VISIBLE
-                holder.feedTypeTextView.text = "Level Passed!"
+                holder.feedTypeTextView.text = fragment.getString(R.string.feed_level_passed)
 
-                holder.message.text = Html.fromHtml(fragment.context!!.getString(R.string.feed_text)
-                        .format(
-                                feed.userName.capitalize(),
-                                feed.levelNumber(),
-                                feed.getNearestStarThreshold()
-                        )
+                holder.message.text = Html.fromHtml(
+                        fragment.getString(R.string.feed_level_passed_message)
+                                .format(
+                                        feed.userName.capitalize(),
+                                        feed.levelNumber(),
+                                        feed.getNearestStarThreshold()
+                                )
                 )
 
                 holder.levelView.levelText = feed.level
@@ -74,11 +76,14 @@ class FeedAdapter(
             }
             "vote_added" -> {
 
-                holder.feedTypeTextView.text = "More Stars!"
+                holder.feedTypeTextView.text = fragment.getString(R.string.feed_more_stars)
 
-                holder.message.text = "A user rated you %d stars on the %s quality".format(
-                        feed.rating,
-                        feed.categoryName.capitalize()
+                holder.message.text = Html.fromHtml(
+                        fragment.getString(R.string.feed_more_stars_message)
+                                .format(
+                                        feed.rating,
+                                        feed.categoryName.capitalize()
+                                )
                 )
 
                 holder.pictureImageView.setImageResource(R.drawable.com_facebook_profile_picture_blank_square)
@@ -88,11 +93,14 @@ class FeedAdapter(
             }
             "category_added" -> {
                 holder.levelView.visibility = View.VISIBLE
-                holder.feedTypeTextView.text = "One More Quality!"
+                holder.feedTypeTextView.text = fragment.getString(R.string.feed_one_more_quality)
 
-                holder.message.text = "%s added the %s quality. You can rate this quality now.".format(
-                        feed.userName.capitalize(),
-                        feed.categoryName.capitalize()
+                holder.message.text = Html.fromHtml(
+                        fragment.getString(R.string.feed_one_more_quality_message)
+                                .format(
+                                        feed.userName.capitalize(),
+                                        feed.categoryName.capitalize()
+                                )
                 )
 
                 holder.levelView.visibility = View.GONE

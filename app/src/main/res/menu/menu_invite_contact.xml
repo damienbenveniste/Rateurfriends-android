@@ -5,6 +5,6 @@
     <item
         android:id="@+id/menu_invite_next"
         android:icon="@drawable/ic_keyboard_arrow_right_black_24dp"
-        android:title="Next"
+        android:title="@string/invite_friends_next_button"
         app:showAsAction="ifRoom|withText" />
 </menu>

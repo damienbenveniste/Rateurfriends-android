@@ -78,7 +78,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="32dp" />
+                    android:textSize="32sp" />
 
                 <TextView
                     android:id="@+id/tv_phone_name"
@@ -102,11 +102,10 @@
                         android:id="@+id/tv_level"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:fontFamily="sans-serif-medium"
                         android:textColor="@color/colorPrimaryText"
-                        android:text="Level 11"
-                        android:textSize="20dp" />
+                        android:textSize="20sp" />
 
                 </LinearLayout>
 
@@ -131,11 +130,10 @@
                         android:id="@+id/tv_mean_star"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:fontFamily="sans-serif-medium"
                         android:textColor="@color/colorPrimaryText"
-                        android:text="2.3"
-                        android:textSize="20dp" />
+                        android:textSize="20sp" />
 
                 </LinearLayout>
 
@@ -145,8 +143,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
                     android:textColor="@color/colorPrimaryText"
-                    android:text="★23000"
-                    android:textSize="20dp" />
+                    android:textSize="20sp" />
 
 
             </LinearLayout>
@@ -184,8 +181,7 @@
             android:id="@+id/progressBar1"
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true" />
+            android:layout_height="wrap_content" />
 
     </FrameLayout>
 

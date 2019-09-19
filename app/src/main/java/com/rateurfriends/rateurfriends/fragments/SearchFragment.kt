@@ -38,7 +38,7 @@ class SearchFragment : Fragment() , ContactProfileAdapter.ItemClickListener {
         searchController = SearchController(this)
 
         if (listener != null) {
-            listener!!.onFragmentInteraction("Your Contacts");
+            listener!!.onFragmentInteraction(this.getString(R.string.search_title));
         }
 
         rvContacts = view.findViewById(R.id.rv_contacts) as RecyclerView

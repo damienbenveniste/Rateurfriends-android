@@ -17,7 +17,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimaryText"
-            android:text="spare stars"
             android:gravity="center" />
 
         <TextView
@@ -25,7 +24,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimaryText"
-            android:text="Spare Qualities"
             android:gravity="center" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -55,8 +53,7 @@
             android:id="@+id/progressBar1"
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true" />
+            android:layout_height="wrap_content"/>
 
     </FrameLayout>
 

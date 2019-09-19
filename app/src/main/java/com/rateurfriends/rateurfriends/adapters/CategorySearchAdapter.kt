@@ -39,13 +39,13 @@ class CategorySearchAdapter(
         init {
             val listener = fragment as ItemClickListener
             itemView.setOnClickListener {
-                listener.onItemClicked(categoryNameList!![adapterPosition])
+                listener.onItemClicked(categoryNameList[adapterPosition])
             }
         }
     }
 
     interface ItemClickListener {
-        fun onItemClicked(category: String)
+        fun onItemClicked(categoryName: String)
     }
 
 }

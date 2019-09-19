@@ -35,7 +35,7 @@
             android:textColor="@color/colorPrimaryText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Invite your friends and get additional qualities"
+            android:text="@string/invite_friends_explanation"
             android:gravity="center"
             android:textSize="14sp" />
 
@@ -78,6 +78,7 @@
         android:id="@+id/layout_warning"
         android:visibility="gone"
         android:clickable="true"
+        android:focusable="true"
         android:layout_height="match_parent">
 
         <androidx.cardview.widget.CardView
@@ -104,7 +105,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
-                    android:text="The invitations with be sent by SMS. Additional charge may apply."
+                    android:text="@string/invite_friends_sms_warning"
                     />
 
                 <com.google.android.material.button.MaterialButton
@@ -113,7 +114,7 @@
                     android:layout_height="50dp"
                     android:layout_marginTop="10dp"
                     app:cornerRadius="20dp"
-                    android:text="understood"
+                    android:text="@string/invite_friends_understood_button"
                     app:icon="@drawable/ic_check_circle_green_24dp"
                     app:iconGravity="textStart" />
 
@@ -137,8 +138,7 @@
             android:id="@+id/progressBar1"
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true" />
+            android:layout_height="wrap_content" />
 
     </FrameLayout>
 

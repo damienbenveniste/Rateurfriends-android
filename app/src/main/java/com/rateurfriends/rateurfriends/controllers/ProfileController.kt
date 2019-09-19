@@ -23,7 +23,6 @@ import com.rateurfriends.rateurfriends.fragments.ProfileFragment
 import com.rateurfriends.rateurfriends.helperClasses.Globals
 import com.rateurfriends.rateurfriends.models.Category
 import android.widget.EditText
-import androidx.appcompat.widget.AppCompatButton
 import com.rateurfriends.rateurfriends.database.dao.FeedDAO
 
 
@@ -66,9 +65,10 @@ class ProfileController(
                 currentUserSpareStars = currentUserSpareStars!! + (spareStars - value)
                 integerButton.plusButton.isEnabled = currentUserSpareStars!! > 0
 
-                fragment.spareStarsTextView!!.text = "Spare Stars: %d".format(
-                        currentUserSpareStars
-                )
+                fragment.spareStarsTextView!!.text = fragment
+                        .getString(R.string.profile_spare_stars_text_view)
+                        .format(currentUserSpareStars)
+
                 spareStars = value
             }
         }
@@ -129,23 +129,56 @@ class ProfileController(
         if (user != null) {
             levelView.levelText = user.level
             userNameTextView.text = user.userName.capitalize()
-            levelTextView.text = "Level %d".format(user.levelNumber())
-            startNumberTextView.text = "★%d".format(user.totalStarNumber)
-            meanStarTextView.text = "%.1f".format(user.meanStarNumber)
-            spareCategoriesTextView.text = "Spare Categories: %d".format(user.spareCategories)
-            spareStarsTextView.text = "Spare Stars: %d".format(user.spareStars)
+
+            levelTextView.text = fragment
+                    .getString(R.string.profile_level_text_view)
+                    .format(user.levelNumber())
+
+            startNumberTextView.text = fragment
+                    .getString(R.string.star_number_format)
+                    .format(user.totalStarNumber)
+
+            meanStarTextView.text = fragment
+                    .getString(R.string.mean_star_format)
+                    .format(user.meanStarNumber)
+
+            spareCategoriesTextView.text = fragment
+                    .getString(R.string.profile_spare_categories_text_view)
+                    .format(user.spareCategories)
+
+            spareStarsTextView.text = fragment
+                    .getString(R.string.profile_spare_stars_text_view)
+                    .format(user.spareStars)
+
             ratingBar.rating = user.meanStarNumber
+
         } else {
 
-            Globals.getInstance().setUser { user ->
-                levelView.levelText = user.level
-                userNameTextView.text = user.userName.capitalize()
-                levelTextView.text = "Level %d".format(user.levelNumber())
-                startNumberTextView.text = "★%d".format(user.totalStarNumber)
-                meanStarTextView.text = "%.1f".format(user.meanStarNumber)
-                spareCategoriesTextView.text = "Spare Categories: %d".format(user.spareCategories)
-                spareStarsTextView.text = "Spare Stars: %d".format(user.spareStars)
-                ratingBar.rating = user.meanStarNumber
+            Globals.getInstance().setUser {
+                levelView.levelText = it.level
+
+                userNameTextView.text = it.userName.capitalize()
+                levelTextView.text = fragment
+                        .getString(R.string.profile_level_text_view)
+                        .format(it.levelNumber())
+
+                startNumberTextView.text = fragment
+                        .getString(R.string.star_number_format)
+                        .format(it.totalStarNumber)
+
+                meanStarTextView.text = fragment
+                        .getString(R.string.mean_star_format)
+                        .format(it.meanStarNumber)
+
+                spareCategoriesTextView.text = fragment
+                        .getString(R.string.profile_spare_categories_text_view)
+                        .format(it.spareCategories)
+
+                spareStarsTextView.text = fragment
+                        .getString(R.string.profile_spare_stars_text_view)
+                        .format(it.spareStars)
+
+                ratingBar.rating = it.meanStarNumber
             }
         }
     }
@@ -223,7 +256,7 @@ class ProfileController(
         }
     }
 
-    fun handlePermission(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    fun handlePermission(requestCode: Int, grantResults: IntArray) {
         when (requestCode) {
             REQUEST_CAMERA -> {
                 if (grantResults.isNotEmpty() &&
@@ -340,9 +373,9 @@ class ProfileController(
 
                     Globals.getInstance().user!!.spareCategories += increment
 
-                    spareCategoriesTextView.text = "Spare Categories: %d".format(
-                            Globals.getInstance().user!!.spareCategories
-                    )
+                    spareCategoriesTextView.text = fragment
+                            .getString(R.string.profile_spare_categories_text_view)
+                            .format(Globals.getInstance().user!!.spareCategories)
 
                     if (Globals.getInstance().user!!.spareCategories <= 0) {
                         fragment.submitCategoryButton!!.isEnabled = false
@@ -353,7 +386,6 @@ class ProfileController(
                 FeedDAO.addCategoryFeed(category.categoryName)
             }
         }
-
     }
 
     private fun validateCategory(editText: EditText): Boolean {

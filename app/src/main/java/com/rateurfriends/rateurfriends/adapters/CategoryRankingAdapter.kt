@@ -49,8 +49,13 @@ class CategoryRankingAdapter constructor(
 
         holder.categoryNameTextView.text = category.categoryName.capitalize()
         holder.startRatingView.rating = category.meanStarNumber
-        holder.starNumberTextView.text = "★%d".format(category.starNumber)
-        holder.starMeanTextView.text = "%.1f".format(category.meanStarNumber)
+        holder.starNumberTextView.text = fragment
+                .getString(R.string.star_number_format)
+                .format(category.starNumber)
+
+        holder.starMeanTextView.text = fragment
+                .getString(R.string.mean_star_format)
+                .format(category.meanStarNumber)
 
         PictureDAO.populateImageViewWithUserId(
                 category.userId,

@@ -32,8 +32,15 @@ class UserRankingAdapter constructor(
 
         holder.contactNameTextView.text = user.userName.capitalize()
         holder.startRatingView.rating = user.meanStarNumber
-        holder.starNumberTextView.text = "★%d".format(user.totalStarNumber)
-        holder.starMeanTextView.text = "%.1f".format(user.meanStarNumber)
+
+        holder.starNumberTextView.text = fragment
+                .getString(R.string.star_number_format)
+                .format(user.totalStarNumber)
+
+        holder.starMeanTextView.text = fragment
+                .getString(R.string.mean_star_format)
+                .format(user.meanStarNumber)
+
         holder.levelView.levelText = user.level
 
         PictureDAO.populateImageViewWithUserId(

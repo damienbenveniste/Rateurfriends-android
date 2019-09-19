@@ -3,9 +3,9 @@
     <group android:checkableBehavior="none">
         <item android:id="@+id/invite_item"
             android:icon="@drawable/ic_person_add_black_24dp"
-            android:title="Invite your Friends" />
+            android:title="@string/navigation_drawer_invite_friends" />
         <item android:id="@+id/signout_item"
             android:icon="@drawable/ic_close_black_24dp"
-            android:title="Sign Out" />
+            android:title="@string/navigation_drawer_signout" />
     </group>
 </menu>

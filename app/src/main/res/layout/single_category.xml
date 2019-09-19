@@ -14,7 +14,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:textColor="@android:color/primary_text_light"
-        android:text="Quality"
         android:textSize="16sp" />
 
 </RelativeLayout>

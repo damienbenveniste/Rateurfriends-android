@@ -1,6 +1,5 @@
 package com.rateurfriends.rateurfriends.adapters
 
-import android.content.Context
 //import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -11,10 +10,8 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.dynamiclinks.ShortDynamicLink
 import com.rateurfriends.rateurfriends.R
 import com.rateurfriends.rateurfriends.customViews.IntegerButton
-import com.rateurfriends.rateurfriends.customViews.RatingView
 import com.rateurfriends.rateurfriends.database.dao.CategoryDAO
 import com.rateurfriends.rateurfriends.database.dao.UserDAO
 import com.rateurfriends.rateurfriends.fragments.ProfileFragment
@@ -36,10 +33,16 @@ class ProfileCategoryAdapter constructor(
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val category = categoryList[position]
         holder.categoryNameTextView.text = category.categoryName.capitalize()
-        holder.ratingTextView.text = "%.1f".format(category.meanStarNumber)
+
+        holder.ratingTextView.text = fragment
+                .getString(R.string.mean_star_format)
+                .format(category.meanStarNumber)
+
         holder.publicCheckbox.isChecked = category.publicVisibility
         holder.startRatingView.rating = category.meanStarNumber
-        holder.starNumberTextView.text = "★%d".format(category.starNumber)
+        holder.starNumberTextView.text = fragment
+                .getString(R.string.star_number_format)
+                .format(category.starNumber)
 
         holder.cancelButton.setOnClickListener {
             removeLayout(holder.incrementLayout, holder.integerButton)
@@ -58,8 +61,8 @@ class ProfileCategoryAdapter constructor(
         CategoryDAO.getCategoryForUser(category.userId, category.categoryName) {
             document ->
             if (document.exists()) {
-                val category = document.toObject(Category::class.java)
-                categoryList[position] = category!!
+                val newCategory = document.toObject(Category::class.java)
+                categoryList[position] = newCategory!!
                 this.notifyItemChanged(position)
             }
         }

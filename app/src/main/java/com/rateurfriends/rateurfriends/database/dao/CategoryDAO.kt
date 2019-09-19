@@ -28,8 +28,6 @@ class CategoryDAO {
 
         fun queryCategory(query: String, callback: (List<DocumentSnapshot>) -> Unit) {
 
-            // TODO: change to capitalize
-//            val queryValue = query.toLowerCase().capitalize()
             val queryValue = query.toLowerCase()
             val db = FirebaseFirestore.getInstance()
 

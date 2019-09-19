@@ -44,7 +44,7 @@ class MarketPlaceFragment : Fragment(),
 
         val view = inflater.inflate(R.layout.fragment_market_place, container, false)
         if (listener != null) {
-            listener!!.onFragmentInteraction("Market Place");
+            listener!!.onFragmentInteraction(this.getString(R.string.market_place_title));
         }
         marketPlaceController = MarketPlaceController(this)
 

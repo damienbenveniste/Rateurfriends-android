@@ -21,7 +21,7 @@
             app:cornerRadius="20dp"
             app:icon="@drawable/ic_tune_black_24dp"
             app:iconGravity="textStart"
-            android:text="Filter" />
+            android:text="@string/hall_of_fame_filter_button" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scroll_view"
@@ -51,8 +51,9 @@
         android:layout_width="match_parent"
         android:background="@color/transparent_dark"
         android:id="@+id/layout_filter"
-        android:visibility="visible"
+        android:visibility="gone"
         android:clickable="true"
+        android:focusable="true"
         android:layout_height="match_parent">
 
         <androidx.cardview.widget.CardView
@@ -72,7 +73,7 @@
                 android:layout_width="40dp"
                 android:layout_height="50dp"
                 android:paddingStart="20dp"
-                android:layout_gravity="right"
+                android:layout_gravity="end"
                 app:cornerRadius="30dp"
                 app:icon="@drawable/ic_cancel_black_24dp"
                 app:iconGravity="textStart" />
@@ -89,7 +90,7 @@
                 <EditText
                     android:id="@+id/et_category_search"
                     android:layout_width="match_parent"
-                    android:hint="Search a Quality"
+                    android:hint="@string/hall_of_fame_search_hint"
                     android:inputType="textCapSentences"
                     android:layout_height="50dp" />
 
@@ -117,9 +118,9 @@
                         android:textColor="@color/colorPrimaryText"
                         app:showText="true"
                         android:checked="true"
-                        android:text="Show for"
-                        android:textOn="Local Only"
-                        android:textOff="All" />
+                        android:text="@string/hall_of_fame_switch_local_text"
+                        android:textOn="@string/hall_of_fame_switch_local_text_on"
+                        android:textOff="@string/hall_of_fame_switch_local_text_off" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/bt_average_filter"
@@ -128,9 +129,9 @@
                         android:textColor="@color/colorPrimaryText"
                         app:showText="true"
                         android:checked="true"
-                        android:text="Order By"
-                        android:textOn="Star Count"
-                        android:textOff="Average" />
+                        android:text="@string/hall_of_fame_switch_average_text"
+                        android:textOn="@string/hall_of_fame_switch_average_text_on"
+                        android:textOff="@string/hall_of_fame_switch_average_text_off" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/bt_high_to_low_filter"
@@ -139,9 +140,9 @@
                         app:showText="true"
                         android:checked="true"
                         android:textColor="@color/colorPrimaryText"
-                        android:text="Direction"
-                        android:textOn="High to Low"
-                        android:textOff="Low to High" />
+                        android:text="@string/hall_of_fame_switch_direction_text"
+                        android:textOn="@string/hall_of_fame_switch_direction_text_on"
+                        android:textOff="@string/hall_of_fame_switch_direction_text_off" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/bt_by_category"
@@ -150,9 +151,9 @@
                         android:textColor="@color/colorPrimaryText"
                         app:showText="true"
                         android:checked="true"
-                        android:text="Filter"
-                        android:textOn="By category"
-                        android:textOff="Overall" />
+                        android:text="@string/hall_of_fame_switch_category_text"
+                        android:textOn="@string/hall_of_fame_switch_category_text_on"
+                        android:textOff="@string/hall_of_fame_switch_category_text_off" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/bt_submit"
@@ -160,7 +161,7 @@
                         android:layout_height="50dp"
                         android:layout_marginTop="20dp"
                         app:cornerRadius="20dp"
-                        android:text="submit"
+                        android:text="@string/hall_of_fame_submit_button"
                         app:icon="@drawable/ic_check_circle_green_24dp"
                         app:iconGravity="textStart" />
 
@@ -186,8 +187,7 @@
             android:id="@+id/progressBar1"
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true" />
+            android:layout_height="wrap_content" />
 
     </FrameLayout>
 

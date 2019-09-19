@@ -4,6 +4,7 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.billingclient.api.*
 import com.google.firebase.auth.FirebaseAuth
+import com.rateurfriends.rateurfriends.R
 import com.rateurfriends.rateurfriends.adapters.ProductsAdapter
 import com.rateurfriends.rateurfriends.database.dao.PurchaseDAO
 import com.rateurfriends.rateurfriends.database.dao.UserDAO
@@ -65,13 +66,13 @@ class MarketPlaceController(var fragment: MarketPlaceFragment) {
         val user = Globals.getInstance().user
 
         if (user != null) {
-            fragment.spareStarTextView!!.text = "Spare Stars: %d".format(
-                    user.spareStars
-            )
+            fragment.spareStarTextView!!.text = fragment
+                    .getString(R.string.market_place_spare_stars_text_view)
+                    .format(user.spareStars)
 
-            fragment.spareCategoryTextView!!.text = "Spare Categories: %d".format(
-                    user.spareCategories
-            )
+            fragment.spareCategoryTextView!!.text = fragment
+                    .getString(R.string.market_place_spare_categories_text_view)
+                    .format(user.spareCategories)
         }
 
     }
@@ -106,7 +107,8 @@ class MarketPlaceController(var fragment: MarketPlaceFragment) {
 
         fragment.progressLayout!!.visibility = View.VISIBLE
 
-        if (billingResult!!.responseCode == BillingClient.BillingResponseCode.OK && purchase?.purchaseToken != null) {
+        if (billingResult!!.responseCode == BillingClient.BillingResponseCode.OK &&
+                purchase?.purchaseToken != null) {
 
             val userId = FirebaseAuth.getInstance().currentUser!!.uid
             val sku = purchase.sku
@@ -119,9 +121,9 @@ class MarketPlaceController(var fragment: MarketPlaceFragment) {
                         Globals.getInstance().user!!.spareStars +=
                                 Product.spareStarsMap.getValue(sku)
 
-                        fragment.spareStarTextView!!.text = "Spare Stars: %d".format(
-                                Globals.getInstance().user!!.spareStars
-                        )
+                        fragment.spareStarTextView!!.text = fragment
+                                .getString(R.string.market_place_spare_stars_text_view)
+                                .format(Globals.getInstance().user!!.spareStars)
                     }
                     fragment.progressLayout!!.visibility = View.GONE
                 }
@@ -135,9 +137,10 @@ class MarketPlaceController(var fragment: MarketPlaceFragment) {
                     if (Globals.getInstance().user != null) {
                         Globals.getInstance().user!!.spareCategories +=
                                 Product.spareCategoriesMap.getValue(sku)
-                        fragment.spareCategoryTextView!!.text = "Spare Categories: %d".format(
-                                Globals.getInstance().user!!.spareCategories
-                        )
+                        fragment.spareCategoryTextView!!.text = fragment
+                                .getString(R.string.market_place_spare_categories_text_view)
+                                .format(Globals.getInstance().user!!.spareCategories)
+
                     }
                     fragment.progressLayout!!.visibility = View.GONE
                 }

@@ -67,12 +67,6 @@ class IntegerButton@JvmOverloads constructor(
         }
     }
 
-//    override fun onViewAdded(child: View?) {
-//        super.onViewAdded(child)
-//        minusButton.setOnClickListener { decreaseInteger() }
-//        plusButton.setOnClickListener { incrementInteger() }
-//    }
-
     override fun onClick(view: View) {
         when(view.id) {
             R.id.bt_minus -> decreaseInteger()

@@ -1,7 +1,9 @@
 package com.rateurfriends.rateurfriends.models
 
 
+import android.content.res.Resources
 import com.google.firebase.firestore.Exclude
+import com.rateurfriends.rateurfriends.R
 import com.rateurfriends.rateurfriends.database.dao.CategoryDAO
 import kotlin.math.max
 import kotlin.math.min
@@ -49,13 +51,13 @@ class Category(
 
         @get: Exclude
         val initialCategories = arrayOf(
-                "Honest",
-                "Loyal",
-                "Smart",
-                "Attractive",
-                "Authentic",
-                "Generous",
-                "Kind"
+                Resources.getSystem().getString(R.string.initial_category_honest),
+                Resources.getSystem().getString(R.string.initial_category_loyal),
+                Resources.getSystem().getString(R.string.initial_category_smart),
+                Resources.getSystem().getString(R.string.initial_category_attractive),
+                Resources.getSystem().getString(R.string.initial_category_authentic),
+                Resources.getSystem().getString(R.string.initial_category_generous),
+                Resources.getSystem().getString(R.string.initial_category_kind)
         )
     }
 

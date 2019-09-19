@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.rateurfriends.rateurfriends.ContactProfileActivity
+import com.rateurfriends.rateurfriends.R
 import com.rateurfriends.rateurfriends.adapters.ContactCategoryAdapter
 import com.rateurfriends.rateurfriends.adapters.ProfileCategoryAdapter
 import com.rateurfriends.rateurfriends.database.dao.CategoryDAO
@@ -20,6 +21,7 @@ import com.rateurfriends.rateurfriends.database.dao.PictureDAO
 import com.rateurfriends.rateurfriends.database.dao.VoteDAO
 import com.rateurfriends.rateurfriends.models.Category
 import com.rateurfriends.rateurfriends.models.User
+import kotlin.concurrent.fixedRateTimer
 
 class ContactProfileController(
         val activity: ContactProfileActivity
@@ -46,10 +48,18 @@ class ContactProfileController(
         }
 
         activity.levelView!!.levelText = user.level
-        activity.levelTextView!!.text = "Level %d".format(user.levelNumber())
+        activity.levelTextView!!.text = activity
+                .getString(R.string.contact_profile_level_text_view)
+                .format(user.levelNumber())
+
         activity.ratingBar!!.rating = user.meanStarNumber
-        activity.meanStarTextView!!.text = "%.1f".format(user.meanStarNumber)
-        activity.startNumberTextView!!.text = "★%d".format(user.totalStarNumber)
+        activity.meanStarTextView!!.text = activity
+                .getString(R.string.mean_star_format)
+                .format(user.meanStarNumber)
+
+        activity.startNumberTextView!!.text = activity
+                .getString(R.string.star_number_format)
+                .format(user.totalStarNumber)
     }
 
     fun getCategories(contact: User, rvCategories: RecyclerView) {

@@ -70,7 +70,7 @@ class HallOfFameFragment : Fragment(),
                               savedInstanceState: Bundle?): View? {
 
         if (listener != null) {
-            listener!!.onFragmentInteraction("Hall of Fame");
+            listener!!.onFragmentInteraction(this.getString(R.string.hall_of_fame_title));
         }
 
         val view = inflater.inflate(R.layout.fragment_hall_of_fame, container, false)
@@ -156,7 +156,6 @@ class HallOfFameFragment : Fragment(),
      * for more information.
      */
     interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         fun onFragmentInteraction(title: String)
     }
 
@@ -169,7 +168,6 @@ class HallOfFameFragment : Fragment(),
          * @param param2 Parameter 2.
          * @return A new instance of fragment HallOfFameFragment.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance() = HallOfFameFragment()
     }

@@ -19,8 +19,8 @@
             android:layout_height="wrap_content"
             app:showText="true"
             android:checked="true"
-            android:textOn="Friends Only"
-            android:textOff="All" />
+            android:textOn="@string/feed_switch_on"
+            android:textOff="@string/feed_switch_off" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_feed"
@@ -44,8 +44,7 @@
             android:id="@+id/progressBar1"
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true" />
+            android:layout_height="wrap_content" />
 
     </FrameLayout>
 

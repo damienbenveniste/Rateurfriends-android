@@ -39,7 +39,7 @@ class InviteFriendsMenuActivity : AppCompatActivity() {
 
         rvContacts = findViewById(R.id.rvContacts)
         spareCategoriesTextView = findViewById(R.id.tv_spare_categories)
-        progressLayout = findViewById(R.id.progress_layout) as FrameLayout
+        progressLayout = findViewById(R.id.progress_layout)
         warningLayout = findViewById(R.id.layout_warning)
         confirmButton = findViewById(R.id.bt_confirm)
 
@@ -67,13 +67,11 @@ class InviteFriendsMenuActivity : AppCompatActivity() {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions:
-                                            Array<String>,
+                                            permissions: Array<String>,
                                             grantResults: IntArray) {
 
         inviteFriendsController!!.handlePermissions(
                 requestCode,
-                permissions,
                 grantResults,
                 contactMap,
                 contactAdapter!!,

@@ -33,8 +33,7 @@
         android:id="@+id/nav_header_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="25dp"
-        android:text="Chike Mgbemena"
+        android:textSize="25sp"
         android:textColor="@color/colorPrimaryDark"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 </LinearLayout>

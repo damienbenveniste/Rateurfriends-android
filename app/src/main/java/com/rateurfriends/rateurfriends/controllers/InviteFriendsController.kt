@@ -21,6 +21,7 @@ import com.rateurfriends.rateurfriends.models.User
 import java.util.*
 import kotlin.collections.ArrayList
 import android.widget.TextView
+import com.rateurfriends.rateurfriends.R
 
 
 class InviteFriendsController(val activity: Activity, val progressLayout: FrameLayout) {
@@ -34,8 +35,9 @@ class InviteFriendsController(val activity: Activity, val progressLayout: FrameL
     fun setTextView(textView: TextView) {
 
         val user = Globals.getInstance().user!!
-        textView.text = "Spare Qualities: %d".format(user.spareCategories)
-
+        textView.text = activity
+                .getString(R.string.invite_friends_spare_qualities)
+                .format(user.spareCategories)
     }
 
     fun removeView(view: View) {
@@ -60,7 +62,6 @@ class InviteFriendsController(val activity: Activity, val progressLayout: FrameL
     }
 
     fun handlePermissions(requestCode: Int,
-                          permissions: Array<String>,
                           grantResults: IntArray,
                           map: LinkedHashMap<String, Contact>,
                           adapter: AllContactsAdapter,
