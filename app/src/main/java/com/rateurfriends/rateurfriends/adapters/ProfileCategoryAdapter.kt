@@ -35,7 +35,7 @@ class ProfileCategoryAdapter constructor(
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val category = categoryList[position]
-        holder.categoryNameTextView.text = category.categoryName
+        holder.categoryNameTextView.text = category.categoryName.capitalize()
         holder.ratingTextView.text = "%.1f".format(category.meanStarNumber)
         holder.publicCheckbox.isChecked = category.publicVisibility
         holder.startRatingView.rating = category.meanStarNumber
@@ -59,7 +59,7 @@ class ProfileCategoryAdapter constructor(
             document ->
             if (document.exists()) {
                 val category = document.toObject(Category::class.java)
-                categoryList.set(position, category!!)
+                categoryList[position] = category!!
                 this.notifyItemChanged(position)
             }
         }

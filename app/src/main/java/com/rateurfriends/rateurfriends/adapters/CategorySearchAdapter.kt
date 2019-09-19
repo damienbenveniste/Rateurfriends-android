@@ -25,7 +25,7 @@ class CategorySearchAdapter(
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val category = categoryNameList[position]
-        holder.categoryNameTextView.text = category
+        holder.categoryNameTextView.text = category.capitalize()
     }
 
     override fun getItemCount(): Int {

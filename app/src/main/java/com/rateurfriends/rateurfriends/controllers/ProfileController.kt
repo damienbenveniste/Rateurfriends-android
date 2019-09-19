@@ -128,7 +128,7 @@ class ProfileController(
 
         if (user != null) {
             levelView.levelText = user.level
-            userNameTextView.text = user.userName
+            userNameTextView.text = user.userName.capitalize()
             levelTextView.text = "Level %d".format(user.levelNumber())
             startNumberTextView.text = "★%d".format(user.totalStarNumber)
             meanStarTextView.text = "%.1f".format(user.meanStarNumber)
@@ -139,7 +139,7 @@ class ProfileController(
 
             Globals.getInstance().setUser { user ->
                 levelView.levelText = user.level
-                userNameTextView.text = user.userName
+                userNameTextView.text = user.userName.capitalize()
                 levelTextView.text = "Level %d".format(user.levelNumber())
                 startNumberTextView.text = "★%d".format(user.totalStarNumber)
                 meanStarTextView.text = "%.1f".format(user.meanStarNumber)
@@ -171,7 +171,7 @@ class ProfileController(
     ) {
         categoryNameList.clear()
         if (query.isNotEmpty()) {
-            CategoryDAO.queryCategory(query.toString()) {
+            CategoryDAO.queryCategory(query.toString().toLowerCase()) {
 
                 for (document in it) {
                     categoryNameList.add(document.id)
@@ -320,7 +320,7 @@ class ProfileController(
                 Globals.getInstance().user!!.spareCategories > 0) {
 
             val category = Category(
-                    addCategoryEditText.text.toString(),
+                    addCategoryEditText.text.toString().toLowerCase(),
                     Globals.getInstance().user!!.userId
             )
 

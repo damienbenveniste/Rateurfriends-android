@@ -1,16 +1,15 @@
 package com.rateurfriends.rateurfriends.models
 
-import com.google.firebase.database.Exclude
-import com.google.firebase.database.FirebaseDatabase
+
+import com.google.firebase.firestore.Exclude
 import com.rateurfriends.rateurfriends.database.dao.CategoryDAO
-import java.util.*
 import kotlin.math.max
 import kotlin.math.min
 
 class Category(
 
         // TODO: add user name and user id
-        val categoryName: String = "",
+        var categoryName: String = "",
 
         val userId: String = "",
 
@@ -23,6 +22,18 @@ class Category(
         val timeStamp: Long = System.currentTimeMillis() / 1000L
 
 ) {
+
+    @Exclude
+    fun toLower(): Category {
+        this.categoryName = this.categoryName.toLowerCase()
+        return this
+    }
+
+    @Exclude
+    fun capitalize(): Category {
+        this.categoryName = this.categoryName.capitalize()
+        return this
+    }
 
     @Exclude
     fun changePublicVisibility(userId: String) {

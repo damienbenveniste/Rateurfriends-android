@@ -187,7 +187,7 @@ class HallOfFameController(val fragment: HallOfFameFragment) {
     ) {
         categoryList.clear()
         if (query.isNotEmpty()) {
-            CategoryDAO.queryCategory(query.toString()) {
+            CategoryDAO.queryCategory(query.toString().toLowerCase()) {
 
                 for (document in it) {
                     categoryList.add(document.id)

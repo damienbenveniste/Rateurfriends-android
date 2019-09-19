@@ -30,7 +30,7 @@ class UserRankingAdapter constructor(
         val user = userList[position]
         // todo: show phoneName!!
 
-        holder.contactNameTextView.text = user.userName
+        holder.contactNameTextView.text = user.userName.capitalize()
         holder.startRatingView.rating = user.meanStarNumber
         holder.starNumberTextView.text = "★%d".format(user.totalStarNumber)
         holder.starMeanTextView.text = "%.1f".format(user.meanStarNumber)

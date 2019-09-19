@@ -10,7 +10,6 @@
     tools:openDrawer="start"
     tools:context=".MainActivity">
 
-    <!--android:layout_marginTop="25dp"-->
     <include
         layout="@layout/app_bar_main"
         android:layout_width="match_parent"
@@ -24,7 +23,6 @@
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer"/>
 
-    <!--android:layout_marginTop="72dp"-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_marginTop="56dp"
         android:layout_width="match_parent"

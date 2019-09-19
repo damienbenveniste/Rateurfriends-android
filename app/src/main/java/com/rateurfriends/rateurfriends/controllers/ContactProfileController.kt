@@ -39,10 +39,10 @@ class ContactProfileController(
                 activity
         )
 
-        activity.nameTextView!!.text = user.userName
+        activity.nameTextView!!.text = user.userName.capitalize()
 
         if (activity.phoneName!!.isNotEmpty()) {
-            activity.phoneNameTextView!!.text = activity.phoneName
+            activity.phoneNameTextView!!.text = activity.phoneName!!.capitalize()
         }
 
         activity.levelView!!.levelText = user.level
@@ -80,16 +80,5 @@ class ContactProfileController(
             }
         }
 
-    }
-
-    fun updateCategory(contact: User, category: Category, position: Int) {
-        CategoryDAO.getCategoryForUser(contact.userId, category.categoryName) {
-            document ->
-            if (document.exists()) {
-                val category = document.toObject(Category::class.java)
-                categoryList.set(position, category!!)
-                categoriesAdapter!!.notifyItemChanged(position)
-            }
-        }
     }
 }

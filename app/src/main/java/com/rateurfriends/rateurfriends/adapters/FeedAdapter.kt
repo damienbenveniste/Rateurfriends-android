@@ -35,7 +35,7 @@ class FeedAdapter(
 
                 holder.message.text = Html.fromHtml(fragment.context!!.getString(R.string.feed_text)
                         .format(
-                                feed.userName,
+                                feed.userName.capitalize(),
                                 feed.levelNumber(),
                                 feed.getNearestStarThreshold()
                         )
@@ -57,7 +57,7 @@ class FeedAdapter(
 
                 holder.message.text = Html.fromHtml(fragment.context!!.getString(R.string.feed_text)
                         .format(
-                                feed.userName,
+                                feed.userName.capitalize(),
                                 feed.levelNumber(),
                                 feed.getNearestStarThreshold()
                         )
@@ -78,7 +78,7 @@ class FeedAdapter(
 
                 holder.message.text = "A user rated you %d stars on the %s quality".format(
                         feed.rating,
-                        feed.categoryName
+                        feed.categoryName.capitalize()
                 )
 
                 holder.pictureImageView.setImageResource(R.drawable.com_facebook_profile_picture_blank_square)
@@ -91,8 +91,8 @@ class FeedAdapter(
                 holder.feedTypeTextView.text = "One More Quality!"
 
                 holder.message.text = "%s added the %s quality. You can rate this quality now.".format(
-                        feed.userName,
-                        feed.categoryName
+                        feed.userName.capitalize(),
+                        feed.categoryName.capitalize()
                 )
 
                 holder.levelView.visibility = View.GONE

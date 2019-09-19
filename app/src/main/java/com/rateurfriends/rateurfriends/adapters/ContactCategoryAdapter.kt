@@ -30,9 +30,9 @@ class ContactCategoryAdapter constructor(
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val category = categoryList[position]
-        holder.categoryNameTextView.text = category.categoryName
+        holder.categoryNameTextView.text = category.categoryName.capitalize()
         holder.ratingTextView.text = "%.1f".format(category.meanStarNumber)
-        holder.startRatingView.rating = category.meanStarNumber.toFloat()
+        holder.startRatingView.rating = category.meanStarNumber
         holder.starNumberTextView.text = "★%d".format(category.starNumber)
 
         holder.cancelButton.setOnClickListener { removeLayout(holder.ratingLayout) }
@@ -54,7 +54,7 @@ class ContactCategoryAdapter constructor(
             document ->
             if (document.exists()) {
                 val category = document.toObject(Category::class.java)
-                categoryList.set(position, category!!)
+                categoryList[position] = category!!
                 this.notifyItemChanged(position)
             }
         }

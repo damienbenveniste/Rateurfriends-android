@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity(),
                 R.string.navigation_drawer_close
         )
 
-        nameTextView.text = FirebaseAuth.getInstance().currentUser!!.displayName
+        nameTextView.text = FirebaseAuth.getInstance().currentUser!!.displayName!!.capitalize()
 
         if (FirebaseAuth.getInstance().currentUser?.photoUrl != null) {
             val userId = FirebaseAuth.getInstance().currentUser?.uid

@@ -51,7 +51,7 @@ class AllContactsAdapter(
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
         val contact = ArrayList(contactMap.values)[position]
-        holder.contactNameTextView.text = contact.phoneName
+        holder.contactNameTextView.text = contact.phoneName.capitalize()
         holder.phoneNumberTextView.text = contact.phoneNumber
 
         val unwrappedDrawable = AppCompatResources.getDrawable(mContext, R.drawable.ic_person_black_24dp)!!.mutate()

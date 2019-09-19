@@ -18,4 +18,17 @@ class Contact(
         @get: Exclude
         var invited: Boolean = false
 
-)
+) {
+
+        @Exclude
+        fun toLower(): Contact {
+                this.phoneName = this.phoneName.toLowerCase()
+                return this
+        }
+
+        @Exclude
+        fun capitalize(): Contact {
+                this.phoneName = this.phoneName.capitalize()
+                return this
+        }
+}

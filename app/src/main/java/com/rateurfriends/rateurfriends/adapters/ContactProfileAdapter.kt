@@ -35,9 +35,9 @@ class ContactProfileAdapter constructor(
         // todo: show phoneName!!
         if (userId in userMap) {
             val user = userMap[userId]!!
-            holder.contactNameTextView.text = user.userName
+            holder.contactNameTextView.text = user.userName.capitalize()
             if (contact.phoneName.isNotEmpty()) {
-                holder.phoneNameTextView.text = contact.phoneName
+                holder.phoneNameTextView.text = contact.phoneName.capitalize()
 
             }
             holder.startRatingView.rating = user.meanStarNumber
@@ -54,9 +54,9 @@ class ContactProfileAdapter constructor(
             holder.levelView.levelText = ""
 
             UserDAO.getUser(userId) {
-                holder.contactNameTextView.text = it.userName
+                holder.contactNameTextView.text = it.userName.capitalize()
                 if (contact.phoneName.isNotEmpty()) {
-                    holder.phoneNameTextView.text = contact.phoneName
+                    holder.phoneNameTextView.text = contact.phoneName.capitalize()
 
                 }
                 holder.startRatingView.rating = it.meanStarNumber

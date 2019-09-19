@@ -1,5 +1,6 @@
 package com.rateurfriends.rateurfriends.models
 
+
 class Product(
 
         val productId: String = "",

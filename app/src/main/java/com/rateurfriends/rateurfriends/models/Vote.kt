@@ -11,6 +11,7 @@ class Vote (
 
         val timeStamp: Long = System.currentTimeMillis() / 1000L
 ) {
+
     fun getRatingStars(): String {
 
         var initString = ""

@@ -10,7 +10,7 @@ class Feed(
 
         val userId: String = "",
 
-        val userName: String = "",
+        var userName: String = "",
 
         val totalStarNumber: Int = 0,
 
@@ -18,13 +18,28 @@ class Feed(
 
         val feedType: String = "",
 
-        val country: String = "",
+        var country: String = "",
 
-        val categoryName: String = "",
+        var categoryName: String = "",
 
         val rating: Int = 0
 
 ) {
+
+    @Exclude
+    fun toLower(): Feed {
+        this.userName = this.userName.toLowerCase()
+        this.country = this.country.toLowerCase()
+        this.categoryName = this.categoryName.toLowerCase()
+        return this
+    }
+
+    @Exclude
+    fun capitalize(): Feed {
+        this.userName = this.userName.capitalize()
+        this.categoryName = this.categoryName.capitalize()
+        return this
+    }
 
     @Exclude
     private fun getNearestThousand(number: Int): Int {

@@ -35,19 +35,19 @@ class CategoryRankingAdapter constructor(
 
         if (userId in userMap) {
             val user = userMap[userId]!!
-            holder.contactNameTextView.text = user.userName
+            holder.contactNameTextView.text = user.userName.capitalize()
 
         } else {
 
             holder.contactNameTextView.text = ""
 
             UserDAO.getUser(userId) {
-                holder.contactNameTextView.text = it.userName
+                holder.contactNameTextView.text = it.userName.capitalize()
                 userMap[it.userId] = it
             }
         }
 
-        holder.categoryNameTextView.text = category.categoryName
+        holder.categoryNameTextView.text = category.categoryName.capitalize()
         holder.startRatingView.rating = category.meanStarNumber
         holder.starNumberTextView.text = "★%d".format(category.starNumber)
         holder.starMeanTextView.text = "%.1f".format(category.meanStarNumber)

@@ -2,7 +2,6 @@ package com.rateurfriends.rateurfriends.models
 
 import android.os.Parcelable
 import com.google.firebase.firestore.Exclude
-import com.rateurfriends.rateurfriends.helperClasses.Globals
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import kotlin.collections.ArrayList
@@ -27,6 +26,18 @@ data class User (
         var totalVoteNumber: Int = Category.initialCategories.size
 
 ): Parcelable {
+
+        @Exclude
+        fun toLower(): User {
+                this.userName = this.userName.toLowerCase()
+                return this
+        }
+
+        @Exclude
+        fun capitalize(): User {
+                this.userName = this.userName.capitalize()
+                return this
+        }
 
         companion object {
 
