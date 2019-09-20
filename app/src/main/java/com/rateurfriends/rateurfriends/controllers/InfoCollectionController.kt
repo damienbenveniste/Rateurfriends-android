@@ -25,7 +25,7 @@ class InfoCollectionController(val activity: Activity) {
 
             progressLayout.visibility = View.VISIBLE
 
-            updateDisplayName(nameText) {
+            updateDisplayName(nameText.trim()) {
                 saveUser {
                     val prefs = activity.getSharedPreferences(
                             activity.getString(R.string.shared_preference_file),
@@ -45,13 +45,18 @@ class InfoCollectionController(val activity: Activity) {
     }
 
     private fun saveUser(callback: () -> Unit) {
-        UserDAO.checkUserExistWithUserId(FirebaseAuth.getInstance().currentUser!!.uid) {
-            if (it) {
-                updateOldUser { callback() }
-            } else {
-                saveNewUser { callback() }
-            }
-        }
+        UserDAO.checkUserExistWithUserId(FirebaseAuth.getInstance().currentUser!!.uid,
+                onSuccess = {
+                    if (it) {
+                        updateOldUser { callback() }
+                    } else {
+                        saveNewUser { callback() }
+                    }
+                },
+                onFailure = {
+                    println("Could not check if the data exists")
+                }
+        )
     }
 
     private fun updateOldUser(callback: () -> Unit) {
@@ -65,11 +70,21 @@ class InfoCollectionController(val activity: Activity) {
             val map = mapOf(
                     "userName" to userName
             )
-            UserDAO.updateUser(userId, map) {
-                it.userName = userName
-                Globals.getInstance().user = it
-                callback()
-            }
+            UserDAO.updateUser(userId, map,
+                    onSuccess = {
+                        it.userName = userName
+                        Globals.getInstance().user = it
+                        callback()
+                    },
+                    onFailure = {
+                        Toast.makeText(
+                                activity,
+                                activity.getString(R.string.info_collection_could_not_update_user),
+                                Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+            )
         }
 
     }
@@ -87,10 +102,19 @@ class InfoCollectionController(val activity: Activity) {
 
         if (userName != null && phoneNumber != null) {
             val user = User(userName, phoneNumber, userId, country=country)
-            UserDAO.insertUser(user, categoryList, activity) {
-                Globals.getInstance().user = user
-                callback()
-            }
+            UserDAO.insertUser(user, categoryList,
+                    onSuccess = {
+                        Globals.getInstance().user = user
+                        callback()
+                    },
+                    onFailure = {
+                        Toast.makeText(
+                                activity,
+                                activity.getString(R.string.information_not_saved),
+                                Toast.LENGTH_SHORT
+                        ).show()
+                    }
+            )
         }
     }
 

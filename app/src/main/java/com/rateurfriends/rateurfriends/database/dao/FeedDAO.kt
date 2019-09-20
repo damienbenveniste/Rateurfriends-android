@@ -21,7 +21,7 @@ class FeedDAO {
             return instance!!
         }
 
-        fun getTopFeed(callback: (List<Feed>) -> Unit) {
+        fun getTopFeed(onSuccess: (List<Feed>) -> Unit, onFailure: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
             val country = Globals.getInstance().user?.country
@@ -34,8 +34,10 @@ class FeedDAO {
                         .get()
                         .addOnSuccessListener { snapshot ->
                             if (!snapshot.isEmpty && snapshot != null) {
-                                callback(snapshot.map { it.toObject(Feed::class.java) })
+                                onSuccess(snapshot.map { it.toObject(Feed::class.java) })
                             }
+                        }.addOnFailureListener {
+                            onFailure()
                         }
             } else {
 
@@ -45,14 +47,16 @@ class FeedDAO {
                         .get()
                         .addOnSuccessListener { snapshot ->
                             if (!snapshot.isEmpty && snapshot != null) {
-                                callback(snapshot.map { it.toObject(Feed::class.java) })
+                                onSuccess(snapshot.map { it.toObject(Feed::class.java) })
                             }
+                        }.addOnFailureListener {
+                            onFailure()
                         }
 
             }
         }
 
-        fun getTopFeedForUser(userId: String, callback: (List<Feed>) -> Unit) {
+        fun getTopFeedForUser(userId: String, onSuccess: (List<Feed>) -> Unit, onFailure: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
 
@@ -64,8 +68,10 @@ class FeedDAO {
                     .get()
                     .addOnSuccessListener { snapshot ->
                         if (!snapshot.isEmpty && snapshot != null) {
-                            callback(snapshot.map { it.toObject(Feed::class.java) })
+                            onSuccess(snapshot.map { it.toObject(Feed::class.java) })
                         }
+                    }.addOnFailureListener {
+                        onFailure()
                     }
         }
 

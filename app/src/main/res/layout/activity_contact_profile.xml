@@ -76,7 +76,6 @@
                     android:id="@+id/tv_profile_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="32sp" />
 
@@ -84,7 +83,6 @@
                     android:id="@+id/tv_phone_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
                     android:textColor="@color/sky_blue"/>
 
                 <LinearLayout
@@ -103,7 +101,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:fontFamily="sans-serif-medium"
                         android:textColor="@color/colorPrimaryText"
                         android:textSize="20sp" />
 
@@ -131,7 +128,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:fontFamily="sans-serif-medium"
                         android:textColor="@color/colorPrimaryText"
                         android:textSize="20sp" />
 
@@ -141,7 +137,6 @@
                     android:id="@+id/tv_start_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
                     android:textColor="@color/colorPrimaryText"
                     android:textSize="20sp" />
 

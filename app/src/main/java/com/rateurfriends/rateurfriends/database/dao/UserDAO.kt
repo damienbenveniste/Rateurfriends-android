@@ -31,7 +31,8 @@ class UserDAO {
         fun transferStarsForUser(userId: String,
                                  starIncrement: Int,
                                  category: Category,
-                                 onSuccess: () -> Unit, onFailure: () -> Unit) {
+                                 onSuccess: () -> Unit,
+                                 onFailure: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
             val categoryRef = db
@@ -110,8 +111,6 @@ class UserDAO {
             }.addOnSuccessListener {
                 onSuccess()
             }.addOnFailureListener {
-                println("Exception")
-                println(it)
                 onFailure()
             }
 
@@ -119,8 +118,8 @@ class UserDAO {
 
         fun insertUser(user: User,
                        categoryList: List<Category>,
-                       activity: Activity,
-                       callback: () -> Unit) {
+                       onSuccess: () -> Unit,
+                       onFailure: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
             val batch = db.batch()
@@ -176,18 +175,18 @@ class UserDAO {
 
 
             batch.commit()
-                    .addOnSuccessListener { callback() }
-                    .addOnFailureListener {
-                        Toast.makeText(
-                                activity,
-                                activity.getString(R.string.information_not_saved),
-                                Toast.LENGTH_SHORT
-                        ).show()
+                    .addOnSuccessListener {
+                        onSuccess()
+                    }.addOnFailureListener {
+                        onFailure()
                     }
         }
 
 
-        fun incrementSpareStarsForUser(userId: String, increment: Int, callback: () -> Unit) {
+        fun incrementSpareStarsForUser(userId: String,
+                                       increment: Int,
+                                       onSuccess: () -> Unit,
+                                       onFailure: () -> Unit) {
 
             // TODO: there does not seem to be a need to keep in sync with Country/country/User
             val db = FirebaseFirestore.getInstance()
@@ -196,24 +195,33 @@ class UserDAO {
                     .document(userId)
                     .update("spareStars", FieldValue.increment(increment.toLong()))
                     .addOnSuccessListener {
-                        callback()
+                        onSuccess()
+                    }.addOnFailureListener {
+                        onFailure()
                     }
 
         }
 
-        fun incrementSpareCategoriesForUser(userId: String, increment: Int, callback: () -> Unit) {
+        fun incrementSpareCategoriesForUser(userId: String,
+                                            increment: Int,
+                                            onSuccess: () -> Unit,
+                                            onFailure: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
             db.collection("User")
                     .document(userId)
                     .update("spareCategories", FieldValue.increment(increment.toLong()))
                     .addOnSuccessListener {
-                        callback()
+                        onSuccess()
+                    }.addOnFailureListener {
+                        onFailure()
                     }
 
         }
 
-        fun getUser(userId: String, callback: (User) -> Unit) {
+        fun getUser(userId: String,
+                    onSuccess: (User) -> Unit,
+                    onFailure: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
             db.collection("User")
@@ -221,13 +229,17 @@ class UserDAO {
                     .get()
                     .addOnSuccessListener { document ->
                         if (document.exists()) {
-                            callback(document.toObject(User::class.java)!!)
+                            onSuccess(document.toObject(User::class.java)!!)
                         }
+                    }.addOnFailureListener {
+                        onFailure()
                     }
 
         }
 
-        fun insertNewContact(contact: Contact, userId: String) {
+        fun insertNewContact(contact: Contact,
+                             userId: String,
+                             onFailure: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
             db.collection("UserAttribute")
@@ -251,14 +263,15 @@ class UserDAO {
                         .collection("Contact")
                         .document(userContact.userId)
                         .set(userContact)
+                        .addOnFailureListener {
+                            onFailure()
+                        }
             }
         }
 
-        fun insertContactListForUser(contactList: List<Contact>, userId: String) {
-            contactList.forEach { insertNewContact(it, userId) }
-        }
-
-        fun getContactsForUser(userId: String, callback: (QuerySnapshot) -> Unit) {
+        fun getContactsForUser(userId: String,
+                               onSuccess: (QuerySnapshot) -> Unit,
+                               onFailure: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
             db.collection("UserAttribute")
@@ -267,15 +280,17 @@ class UserDAO {
                     .get()
                     .addOnSuccessListener { documents ->
                         if (documents != null && !documents.isEmpty) {
-                            callback(documents)
+                            onSuccess(documents)
                         }
                     }
                     .addOnFailureListener {
-                        println("Failure")
+                        onFailure()
                     }
         }
 
-        fun checkUserExistWithPhone(phoneNumber: String, callback: (QuerySnapshot) -> Unit) {
+        fun checkUserExistWithPhone(phoneNumber: String,
+                                    onSuccess: (QuerySnapshot) -> Unit,
+                                    onFailure: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
             db.collection("User")
@@ -283,26 +298,31 @@ class UserDAO {
                     .get()
                     .addOnSuccessListener { documents ->
                         if (documents != null) {
-                            callback(documents)
+                            onSuccess(documents)
                         }
+                    }.addOnFailureListener {
+                        onFailure()
                     }
         }
 
-        fun checkUserExistWithUserId(userId: String, callback: (Boolean) -> Unit) {
+        fun checkUserExistWithUserId(userId: String, onSuccess: (Boolean) -> Unit,
+                                     onFailure: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
             db.collection("User")
                     .document(userId)
                     .get()
                     .addOnSuccessListener {
-                        callback(it.exists())
+                        onSuccess(it.exists())
                     }.addOnFailureListener {
-                        println("Could not check if exits")
-                        println(it)
+                        onFailure()
                     }
         }
 
-        fun updateUser(userId: String, params: Map<String, Any?>, callback: (User) -> Unit) {
+        fun updateUser(userId: String,
+                       params: Map<String, Any?>,
+                       onSuccess: (User) -> Unit,
+                       onFailure: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
             val userRef = db.collection("User")
@@ -318,17 +338,17 @@ class UserDAO {
                 }
                 user
             }.addOnSuccessListener {
-                callback(it)
+                onSuccess(it)
             }.addOnFailureListener {
-                println("Could not update")
-                println(it)
+                onFailure()
             }
         }
 
         fun getUsersBy(orderByCount: Boolean,
                        descending: Boolean,
                        local: Boolean,
-                       callback: (List<User>) -> Unit) {
+                       onSuccess: (List<User>) -> Unit,
+                       onFailure: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
             val direction = if (descending) Query.Direction.DESCENDING else Query.Direction.ASCENDING
@@ -345,8 +365,10 @@ class UserDAO {
                         .get()
                         .addOnSuccessListener {
                             if (!it.isEmpty && it != null) {
-                                callback(it.map{u -> u.toObject(User::class.java)})
+                                onSuccess(it.map{u -> u.toObject(User::class.java)})
                             }
+                        }.addOnFailureListener {
+                            onFailure()
                         }
 
             } else {
@@ -357,14 +379,19 @@ class UserDAO {
                         .get()
                         .addOnSuccessListener {
                             if (!it.isEmpty && it != null) {
-                                callback(it.map{u -> u.toObject(User::class.java)})
+                                onSuccess(it.map{u -> u.toObject(User::class.java)})
                             }
+                        }.addOnFailureListener {
+                            onFailure()
                         }
 
             }
         }
 
-        fun sendInvite(userId: String, contact: Contact, callback: () -> Unit) {
+        fun sendInvite(userId: String,
+                       contact: Contact,
+                       onSuccess: () -> Unit,
+                       onFailure: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
             val batch = db.batch()
@@ -380,32 +407,34 @@ class UserDAO {
             batch.update(userRef, "spareCategories", FieldValue.increment(1))
 
             batch.commit().addOnSuccessListener {
-                callback()
+                onSuccess()
+            }.addOnFailureListener {
+                onFailure()
             }
         }
 
-        fun getInvitedContactsForUser(userId: String, callback: (List<Contact>) -> Unit) {
+        fun getInvitedContactsForUser(userId: String,
+                                      onSuccess: (List<Contact>) -> Unit,
+                                      onFailure: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
             db.collection("UserAttribute")
                     .document(userId)
                     .collection("Invite")
                     .get()
-                    .addOnCompleteListener {
+                    .addOnSuccessListener {
                         var contactList: List<Contact> = listOf()
-                        if (it.isSuccessful) {
-                            val snapshot = it.result!!
-                            if (!snapshot.isEmpty) {
-                                contactList = snapshot.map { doc ->
-                                    doc.toObject(Contact::class.java)
-                                }
+                        if (!it.isEmpty && it != null) {
+                            contactList = it.map { doc ->
+                                doc.toObject(Contact::class.java)
                             }
                         }
-                        callback(contactList)
+                        onSuccess(contactList)
+                    }. addOnFailureListener {
+                        onFailure()
                     }
-
-
         }
+
     }
 
 }

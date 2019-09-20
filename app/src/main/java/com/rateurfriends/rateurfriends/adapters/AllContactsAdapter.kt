@@ -104,12 +104,19 @@ class AllContactsAdapter(
         val user = Globals.getInstance().user!!
         val increment = 1
 
-        UserDAO.sendInvite(user.userId, contact) {
-            Globals.getInstance().user!!.incrementSpareCategories(increment)
-            textView.text = mContext
-                    .getString(R.string.invite_friends_spare_qualities)
-                    .format(user.spareCategories)
-        }
+        UserDAO.sendInvite(user.userId, contact,
+                onSuccess = {
+                    Globals.getInstance().user!!.incrementSpareCategories(increment)
+                    textView.text = mContext
+                            .getString(R.string.invite_friends_spare_qualities)
+                            .format(user.spareCategories)
+                },
+                onFailure = {
+
+                    println("Could not capture the invite")
+
+                }
+        )
     }
 
     private fun resendInvite(contact: Contact) {

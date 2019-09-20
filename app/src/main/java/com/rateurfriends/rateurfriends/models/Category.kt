@@ -38,9 +38,14 @@ class Category(
 
     @Exclude
     fun changePublicVisibility(userId: String) {
-        CategoryDAO.setPublicVisibility(this, userId, !this.publicVisibility) {
-            this.publicVisibility = !this.publicVisibility
-        }
+        CategoryDAO.setPublicVisibility(this, userId, !this.publicVisibility,
+                onSuccess = {
+                    this.publicVisibility = !this.publicVisibility
+                },
+                onFailure = {
+                    println("Network issues")
+                }
+        )
     }
 
     var meanStarNumber: Float = max(min(starNumber.toFloat() / voteNumber.toFloat(), 5f), 0f)

@@ -132,10 +132,15 @@ class FeedAdapter(
                 val feed = feedList[adapterPosition]
                 val userId = feed.userId
                 if (feed.feedType != "vote_added") {
-                    UserDAO.getUser(userId) {
-                        val listener = fragment as ItemClickListener
-                        listener.onItemClicked(it, "")
-                    }
+                    UserDAO.getUser(userId,
+                            onSuccess = {
+                                val listener = fragment as ItemClickListener
+                                listener.onItemClicked(it, "")
+                            },
+                            onFailure = {
+                                println("Could not get user")
+                            }
+                    )
                 }
             }
         }

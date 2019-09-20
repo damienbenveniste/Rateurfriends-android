@@ -7,6 +7,7 @@ import android.view.View
 //import android.support.v7.widget.LinearLayoutManager
 //import android.support.v7.widget.RecyclerView
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -65,30 +66,40 @@ class ContactProfileController(
     fun getCategories(contact: User, rvCategories: RecyclerView) {
         val userId = contact.userId
         activity.progressLayout!!.visibility = View.VISIBLE
-        CategoryDAO.getCategoriesForUser(userId) {
-            documents ->
-            if (!documents.isEmpty) {
+        CategoryDAO.getCategoriesForUser(userId,
+                onSuccess = {
+                    documents ->
+                    if (!documents.isEmpty) {
 
-                for (doc in documents) {
-                    val category = doc.toObject(Category::class.java)
-                    if (category.publicVisibility) {
-                        categoryList.add(category)
+                        for (doc in documents) {
+                            val category = doc.toObject(Category::class.java)
+                            if (category.publicVisibility) {
+                                categoryList.add(category)
+                            }
+                        }
+
+                        categoriesAdapter = ContactCategoryAdapter(
+                                FirebaseAuth.getInstance().currentUser!!.uid,
+                                categoryList,
+                                activity,
+                                activity.progressLayout!!,
+                                activity
+                        )
+
+                        rvCategories.adapter = categoriesAdapter
+                        rvCategories.layoutManager = LinearLayoutManager(activity)
+                        activity.progressLayout!!.visibility = View.GONE
                     }
+                },
+                onFailure = {
+                    activity.progressLayout!!.visibility = View.GONE
+                    Toast.makeText(
+                            activity,
+                            activity.getString(R.string.contact_profile_could_not_get_qualities),
+                            Toast.LENGTH_SHORT
+                    ).show()
                 }
-
-                categoriesAdapter = ContactCategoryAdapter(
-                        FirebaseAuth.getInstance().currentUser!!.uid,
-                        categoryList,
-                        activity,
-                        activity.progressLayout!!,
-                        activity
-                )
-
-                rvCategories.adapter = categoriesAdapter
-                rvCategories.layoutManager = LinearLayoutManager(activity)
-                activity.progressLayout!!.visibility = View.GONE
-            }
-        }
+        )
 
     }
 }

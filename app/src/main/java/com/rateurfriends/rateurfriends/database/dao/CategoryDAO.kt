@@ -26,7 +26,8 @@ class CategoryDAO {
         }
 
 
-        fun queryCategory(query: String, callback: (List<DocumentSnapshot>) -> Unit) {
+        fun queryCategory(query: String, onSuccess: (List<DocumentSnapshot>) -> Unit,
+                          onFailure: () -> Unit) {
 
             val queryValue = query.toLowerCase()
             val db = FirebaseFirestore.getInstance()
@@ -38,65 +39,93 @@ class CategoryDAO {
                     .get()
                     .addOnSuccessListener {
                         if (!it.isEmpty) {
-                            callback(it.documents)
+                            onSuccess(it.documents)
                         }
+                    }.addOnFailureListener {
+                        onFailure()
                     }
 
         }
 
-        fun insertCategoryForUser(category: Category, user: User, callback: () -> Unit) {
+        fun insertCategoryForUser(category: Category,
+                                  user: User,
+                                  onSuccess: () -> Unit,
+                                  onFailure: () -> Unit,
+                                  onKnownCategory: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
-            val batch = db.batch()
 
-            val refAttribute = db.collection("UserAttribute")
+            println(category.categoryName)
+
+            db.collection("UserAttribute")
                     .document(user.userId)
                     .collection("Category")
                     .document(category.categoryName)
-
-            val refCategory = db.collection("Category")
-                    .document(category.categoryName)
-                    .collection("User")
-                    .document(user.userId)
-
-            batch.set(refAttribute, category)
-            batch.set(refCategory, category)
-
-            batch.set(
-                    db.collection("Category")
-                            .document(category.categoryName),
-                    mapOf( "count" to FieldValue.increment(1)),
-                    SetOptions.merge()
-            )
-
-            if (user.country.isNotEmpty()) {
-
-                val countryCategoryRef = db.collection("Country")
-                        .document(user.country)
-                        .collection("Category")
-                        .document(category.categoryName)
-                        .collection("User")
-                        .document(user.userId)
-
-                batch.set(countryCategoryRef, category)
-
-                batch.set(
-                        db.collection("Country")
-                                .document(user.country)
-                                .collection("Category")
-                                .document(category.categoryName),
-                        mapOf( "count" to FieldValue.increment(1)),
-                        SetOptions.merge()
-                )
-            }
-
-            batch.commit()
+                    .get()
                     .addOnSuccessListener {
-                        callback()
+                        println(it.exists())
+                        println(it)
+                        if (!it.exists()) {
+
+                            val batch = db.batch()
+
+                            val refAttribute = db.collection("UserAttribute")
+                                    .document(user.userId)
+                                    .collection("Category")
+                                    .document(category.categoryName)
+
+                            val refCategory = db.collection("Category")
+                                    .document(category.categoryName)
+                                    .collection("User")
+                                    .document(user.userId)
+
+                            batch.set(refAttribute, category)
+                            batch.set(refCategory, category)
+
+                            batch.set(
+                                    db.collection("Category")
+                                            .document(category.categoryName),
+                                    mapOf( "count" to FieldValue.increment(1)),
+                                    SetOptions.merge()
+                            )
+
+                            if (user.country.isNotEmpty()) {
+
+                                val countryCategoryRef = db.collection("Country")
+                                        .document(user.country)
+                                        .collection("Category")
+                                        .document(category.categoryName)
+                                        .collection("User")
+                                        .document(user.userId)
+
+                                batch.set(countryCategoryRef, category)
+
+                                batch.set(
+                                        db.collection("Country")
+                                                .document(user.country)
+                                                .collection("Category")
+                                                .document(category.categoryName),
+                                        mapOf( "count" to FieldValue.increment(1)),
+                                        SetOptions.merge()
+                                )
+                            }
+
+                            batch.commit()
+                                    .addOnSuccessListener {
+                                        onSuccess()
+                                    }.addOnFailureListener {
+                                        onFailure()
+                                    }
+
+                        } else {
+                            onKnownCategory()
+                        }
                     }
         }
 
-        fun getCategoriesForUser(userId: String, callback: (QuerySnapshot) -> Unit) {
+        fun getCategoriesForUser(userId: String,
+                                 onSuccess: (QuerySnapshot) -> Unit,
+                                 onFailure: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
             db.collection("UserAttribute")
@@ -105,12 +134,17 @@ class CategoryDAO {
                     .get()
                     .addOnSuccessListener {
                         if (!it.isEmpty) {
-                            callback(it)
+                            onSuccess(it)
                         }
+                    }.addOnFailureListener {
+                        onFailure()
                     }
         }
 
-        fun getCategoryForUser(userId: String, categoryName: String, callback: (DocumentSnapshot) -> Unit) {
+        fun getCategoryForUser(userId: String,
+                               categoryName: String,
+                               onSuccess: (DocumentSnapshot) -> Unit,
+                               onFailure: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
             db.collection("UserAttribute")
@@ -118,10 +152,15 @@ class CategoryDAO {
                     .collection("Category")
                     .document(categoryName)
                     .get()
-                    .addOnSuccessListener { documents -> callback(documents) }
+                    .addOnSuccessListener { documents -> onSuccess(documents) }
+                    .addOnFailureListener { onFailure() }
         }
 
-        fun setPublicVisibility(category: Category, userId: String, publicVisibility: Boolean, callback: () -> Unit) {
+        fun setPublicVisibility(category: Category,
+                                userId: String,
+                                publicVisibility: Boolean,
+                                onSuccess: () -> Unit,
+                                onFailure: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
             val batch = db.batch()
@@ -141,7 +180,9 @@ class CategoryDAO {
 
             batch.commit()
                     .addOnSuccessListener {
-                        callback()
+                        onSuccess()
+                    }.addOnFailureListener {
+                        onFailure()
                     }
         }
 
@@ -149,7 +190,8 @@ class CategoryDAO {
                                 orderByCount: Boolean,
                                 descending: Boolean,
                                 local: Boolean,
-                                callback: (List<Category>) -> Unit) {
+                                onSuccess: (List<Category>) -> Unit,
+                                onFailure: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
             val direction = if (descending) Query.Direction.DESCENDING else Query.Direction.ASCENDING
@@ -169,11 +211,13 @@ class CategoryDAO {
                         .get()
                         .addOnSuccessListener { snapshot ->
                             if (!snapshot.isEmpty && snapshot != null) {
-                                callback(snapshot.map {
+                                onSuccess(snapshot.map {
                                             it.toObject(Category::class.java)
                                         }
                                 )
                             }
+                        }.addOnFailureListener {
+                            onFailure()
                         }
 
 
@@ -187,18 +231,24 @@ class CategoryDAO {
                         .get()
                         .addOnSuccessListener { snapshot ->
                             if (!snapshot.isEmpty && snapshot != null) {
-                                callback(snapshot.map {
+                                onSuccess(snapshot.map {
                                     it.toObject(Category::class.java)
                                 }
                                 )
                             }
+                        }.addOnFailureListener {
+                            onFailure()
                         }
 
             }
 
         }
 
-        fun getUsersByCategory(orderByCount: Boolean, descending: Boolean, local: Boolean, callback: (String, List<Category>) -> Unit) {
+        fun getUsersByCategory(orderByCount: Boolean,
+                               descending: Boolean,
+                               local: Boolean,
+                               onSuccess: (String, List<Category>) -> Unit,
+                               onFailure: () -> Unit) {
 
 
             val db = FirebaseFirestore.getInstance()
@@ -234,7 +284,7 @@ class CategoryDAO {
                                             .get()
                                             .addOnSuccessListener { snapshot ->
                                                 if (!snapshot.isEmpty && snapshot != null) {
-                                                    callback(
+                                                    onSuccess(
                                                             category,
                                                             snapshot.map {
                                                                 it.toObject(Category::class.java)
@@ -244,6 +294,8 @@ class CategoryDAO {
                                             }
                                 }
                             }
+                        }.addOnFailureListener {
+                            onFailure()
                         }
 
             } else {
@@ -266,7 +318,7 @@ class CategoryDAO {
                                             .get()
                                             .addOnSuccessListener { snapshot ->
                                                 if (!snapshot.isEmpty && snapshot != null) {
-                                                    callback(
+                                                    onSuccess(
                                                             category,
                                                             snapshot.map {
                                                                 it.toObject(Category::class.java)
@@ -276,6 +328,8 @@ class CategoryDAO {
                                             }
                                 }
                             }
+                        }.addOnFailureListener {
+                            onFailure()
                         }
 
             }

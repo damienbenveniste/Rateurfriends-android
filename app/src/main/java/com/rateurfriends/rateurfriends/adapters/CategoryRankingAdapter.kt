@@ -41,10 +41,15 @@ class CategoryRankingAdapter constructor(
 
             holder.contactNameTextView.text = ""
 
-            UserDAO.getUser(userId) {
-                holder.contactNameTextView.text = it.userName.capitalize()
-                userMap[it.userId] = it
-            }
+            UserDAO.getUser(userId,
+                    onSuccess = {
+                        holder.contactNameTextView.text = it.userName.capitalize()
+                        userMap[it.userId] = it
+                    },
+                    onFailure = {
+                        println("Could not get user")
+                    }
+            )
         }
 
         holder.categoryNameTextView.text = category.categoryName.capitalize()

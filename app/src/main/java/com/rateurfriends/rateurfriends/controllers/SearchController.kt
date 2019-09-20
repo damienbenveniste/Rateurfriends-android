@@ -4,9 +4,11 @@ import android.app.SearchManager
 import android.content.Context
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
+import com.rateurfriends.rateurfriends.R
 import com.rateurfriends.rateurfriends.adapters.ContactProfileAdapter
 import com.rateurfriends.rateurfriends.database.dao.UserDAO
 import com.rateurfriends.rateurfriends.fragments.SearchFragment
@@ -26,14 +28,23 @@ class SearchController(val fragment: SearchFragment) {
         fragment.rvContacts!!.layoutManager = LinearLayoutManager(fragment.activity)
 
         val userId = FirebaseAuth.getInstance().currentUser!!.uid
-        UserDAO.getContactsForUser(userId) {
-            it.forEach { doc ->
-                contactList.add(doc.toObject(Contact::class.java))
-            }
-            contactAdapter!!.notifyDataSetChanged()
-            fragment.progressLayout!!.visibility = View.GONE
-
-        }
+        UserDAO.getContactsForUser(userId,
+                onSuccess = {
+                    it.forEach { doc ->
+                        contactList.add(doc.toObject(Contact::class.java))
+                    }
+                    contactAdapter!!.notifyDataSetChanged()
+                    fragment.progressLayout!!.visibility = View.GONE
+                },
+                onFailure = {
+                    fragment.progressLayout!!.visibility = View.GONE
+                    Toast.makeText(
+                            fragment.activity!!,
+                            fragment.getString(R.string.search_could_not_get_contacts),
+                            Toast.LENGTH_LONG
+                    ).show()
+                }
+        )
     }
 
     fun setupSearch(searchItem: MenuItem?) {

@@ -17,7 +17,7 @@ class PurchaseDAO() {
             return instance!!
         }
 
-        fun capturePurchase(product: Product) {
+        fun capturePurchase(product: Product, onFailure: () -> Unit) {
             val purchaseId = product.timeStamp.toString()
 
             val db = FirebaseFirestore.getInstance()
@@ -27,6 +27,9 @@ class PurchaseDAO() {
                     .collection("Purchase")
                     .document(purchaseId)
                     .set(product)
+                    .addOnFailureListener {
+                        onFailure()
+                    }
         }
 
     }

@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 //import android.widget.ToggleButton
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.SwitchCompat
@@ -88,92 +89,123 @@ class HallOfFameController(val fragment: HallOfFameFragment) {
                 CategoryDAO.getUsersByCategory(
                         orderCountByState,
                         descendingDirectionState,
-                        locationState) { category, categoryList ->
+                        locationState,
+                        onSuccess = {
+                            category, categoryList ->
 
-                    fragment.progressLayout!!.visibility = View.GONE
+                            fragment.progressLayout!!.visibility = View.GONE
 
-                    val textView = TextView(ContextThemeWrapper(
-                            fragment.context,
-                            R.style.CategoryTextView)
-                    )
+                            val textView = TextView(ContextThemeWrapper(
+                                    fragment.context,
+                                    R.style.CategoryTextView)
+                            )
 
-                    textView.text = category.capitalize()
+                            textView.text = category.capitalize()
 
-                    val rvContacts = RecyclerView(fragment.context!!)
-                    rvContacts.setHasFixedSize(true)
-                    val contactAdapter = CategoryRankingAdapter(
-                            categoryList,
-                            fragment,
-                            R.layout.single_user_view_horizontal
-                    )
+                            val rvContacts = RecyclerView(fragment.context!!)
+                            rvContacts.setHasFixedSize(true)
+                            val contactAdapter = CategoryRankingAdapter(
+                                    categoryList,
+                                    fragment,
+                                    R.layout.single_user_view_horizontal
+                            )
 
-                    rvContacts.adapter = contactAdapter
-                    rvContacts.layoutManager = LinearLayoutManager(
-                            fragment.activity,
-                            LinearLayoutManager.HORIZONTAL,
-                            false
-                    )
+                            rvContacts.adapter = contactAdapter
+                            rvContacts.layoutManager = LinearLayoutManager(
+                                    fragment.activity,
+                                    LinearLayoutManager.HORIZONTAL,
+                                    false
+                            )
 
-                    fragment.mainLayout!!.addView(textView)
-                    fragment.mainLayout!!.addView(rvContacts)
-                }
+                            fragment.mainLayout!!.addView(textView)
+                            fragment.mainLayout!!.addView(rvContacts)
+                        },
+                        onFailure = {
+                            fragment.progressLayout!!.visibility = View.GONE
+                            Toast.makeText(
+                                    fragment.context,
+                                    fragment.getString(R.string.hall_of_fame_could_not_get_data),
+                                    Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                )
             }
             !byCategoryState && selectedCategory == null -> {
                 UserDAO.getUsersBy(orderCountByState,
                         descendingDirectionState,
-                        locationState) { userList ->
+                        locationState,
+                        onSuccess = { userList ->
 
-                    fragment.progressLayout!!.visibility = View.GONE
+                            fragment.progressLayout!!.visibility = View.GONE
 
-                    val textView = TextView(ContextThemeWrapper(
-                            fragment.context,
-                            R.style.CategoryTextView)
-                    )
-                    textView.text = fragment.getString(R.string.hall_of_fame_all_users_text_view)
+                            val textView = TextView(ContextThemeWrapper(
+                                    fragment.context,
+                                    R.style.CategoryTextView)
+                            )
+                            textView.text = fragment.getString(R.string.hall_of_fame_all_users_text_view)
 
-                    val rvContacts = RecyclerView(fragment.context!!)
-                    rvContacts.setHasFixedSize(true)
+                            val rvContacts = RecyclerView(fragment.context!!)
+                            rvContacts.setHasFixedSize(true)
 
-                    val contactAdapter = UserRankingAdapter(
-                            userList,
-                            fragment
-                    )
-                    rvContacts.adapter = contactAdapter
-                    rvContacts.layoutManager = LinearLayoutManager(fragment.activity)
+                            val contactAdapter = UserRankingAdapter(
+                                    userList,
+                                    fragment
+                            )
+                            rvContacts.adapter = contactAdapter
+                            rvContacts.layoutManager = LinearLayoutManager(fragment.activity)
 
-                    fragment.mainLayout!!.addView(textView)
-                    fragment.mainLayout!!.addView(rvContacts)
+                            fragment.mainLayout!!.addView(textView)
+                            fragment.mainLayout!!.addView(rvContacts)
 
-                }
+                        },
+                        onFailure = {
+                            fragment.progressLayout!!.visibility = View.GONE
+                            Toast.makeText(
+                                    fragment.context,
+                                    fragment.getString(R.string.hall_of_fame_could_not_get_data),
+                                    Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                )
             }
             selectedCategory != null -> {
 
                 CategoryDAO.getUsersForCategory(selectedCategory!!,
                         orderCountByState,
                         descendingDirectionState,
-                        locationState) { categoryList ->
+                        locationState,
+                        onSuccess = {
+                            categoryList ->
 
-                    fragment.progressLayout!!.visibility = View.GONE
+                            fragment.progressLayout!!.visibility = View.GONE
 
-                    val textView = TextView(ContextThemeWrapper(
-                            fragment.context,
-                            R.style.CategoryTextView)
-                    )
-                    textView.text = selectedCategory
-                    val rvContacts = RecyclerView(fragment.context!!)
-                    rvContacts.setHasFixedSize(true)
-                    val contactAdapter = CategoryRankingAdapter(
-                            categoryList,
-                            fragment,
-                            R.layout.single_user_view_vertical
-                    )
-                    rvContacts.adapter = contactAdapter
-                    rvContacts.layoutManager = LinearLayoutManager(fragment.activity)
+                            val textView = TextView(ContextThemeWrapper(
+                                    fragment.context,
+                                    R.style.CategoryTextView)
+                            )
+                            textView.text = selectedCategory
+                            val rvContacts = RecyclerView(fragment.context!!)
+                            rvContacts.setHasFixedSize(true)
+                            val contactAdapter = CategoryRankingAdapter(
+                                    categoryList,
+                                    fragment,
+                                    R.layout.single_user_view_vertical
+                            )
+                            rvContacts.adapter = contactAdapter
+                            rvContacts.layoutManager = LinearLayoutManager(fragment.activity)
 
-                    fragment.mainLayout!!.addView(textView)
-                    fragment.mainLayout!!.addView(rvContacts)
-
-                }
+                            fragment.mainLayout!!.addView(textView)
+                            fragment.mainLayout!!.addView(rvContacts)
+                        },
+                        onFailure = {
+                            fragment.progressLayout!!.visibility = View.GONE
+                            Toast.makeText(
+                                    fragment.context,
+                                    fragment.getString(R.string.hall_of_fame_could_not_get_data),
+                                    Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                )
             }
         }
 
@@ -187,15 +219,22 @@ class HallOfFameController(val fragment: HallOfFameFragment) {
     ) {
         categoryList.clear()
         if (query.isNotEmpty()) {
-            CategoryDAO.queryCategory(query.toString().toLowerCase()) {
+            CategoryDAO.queryCategory(query.toString().toLowerCase(),
+                    onSuccess = {
+                        for (document in it) {
+                            categoryList.add(document.id)
+                        }
 
-                for (document in it) {
-                    categoryList.add(document.id)
-                }
-
-                adapter.notifyDataSetChanged()
-
-            }
+                        adapter.notifyDataSetChanged()
+                    },
+                    onFailure = {
+                        Toast.makeText(
+                                fragment.context,
+                                fragment.getString(R.string.hall_of_fame_problem_finding_qualities),
+                                Toast.LENGTH_SHORT
+                        ).show()
+                    }
+            )
         } else {
             adapter.notifyDataSetChanged()
         }

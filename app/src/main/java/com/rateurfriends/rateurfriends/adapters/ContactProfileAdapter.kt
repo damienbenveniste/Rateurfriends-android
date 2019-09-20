@@ -59,24 +59,30 @@ class ContactProfileAdapter constructor(
             holder.starMeanTextView.text = ""
             holder.levelView.levelText = ""
 
-            UserDAO.getUser(userId) {
-                holder.contactNameTextView.text = it.userName.capitalize()
-                if (contact.phoneName.isNotEmpty()) {
-                    holder.phoneNameTextView.text = contact.phoneName.capitalize()
+            UserDAO.getUser(userId,
+                    onSuccess = {
+                        holder.contactNameTextView.text = it.userName.capitalize()
+                        if (contact.phoneName.isNotEmpty()) {
+                            holder.phoneNameTextView.text = contact.phoneName.capitalize()
 
-                }
-                holder.startRatingView.rating = it.meanStarNumber
-                holder.starNumberTextView.text =  fragment
-                        .getString(R.string.star_number_format)
-                        .format(it.totalStarNumber)
+                        }
+                        holder.startRatingView.rating = it.meanStarNumber
+                        holder.starNumberTextView.text =  fragment
+                                .getString(R.string.star_number_format)
+                                .format(it.totalStarNumber)
 
-                holder.starMeanTextView.text = fragment
-                        .getString(R.string.mean_star_format)
-                        .format(it.meanStarNumber)
+                        holder.starMeanTextView.text = fragment
+                                .getString(R.string.mean_star_format)
+                                .format(it.meanStarNumber)
 
-                holder.levelView.levelText = it.level
-                userMap[it.userId] = it
-            }
+                        holder.levelView.levelText = it.level
+                        userMap[it.userId] = it
+
+                    },
+                    onFailure = {
+                        println("Could not get the user")
+                    }
+            )
         }
 
         PictureDAO.populateImageViewWithUserId(
@@ -118,9 +124,14 @@ class ContactProfileAdapter constructor(
     override fun getFilter(): Filter {
         contactList.forEach {
             if (it.userId !in userMap) {
-                UserDAO.getUser(it.userId) { user ->
-                    userMap[user.userId] = user
-                }
+                UserDAO.getUser(it.userId,
+                        onSuccess = {
+                            userMap[it.userId] = it
+                        },
+                        onFailure = {
+                            println("Could not load the contacts")
+                        }
+                )
             }
         }
         return object : Filter() {

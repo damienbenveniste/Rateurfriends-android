@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.RatingBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.recyclerview.widget.RecyclerView
 import com.rateurfriends.rateurfriends.R
@@ -44,11 +45,16 @@ class ContactCategoryAdapter constructor(
             submitRating(holder.ratingLayout, holder.ratingBar.rating, category, position)
         }
 
-        VoteDAO.getVote(userId, category.userId, category.categoryName) {
-            holder.userVoteTextView.text = mContext
-                    .getString(R.string.contact_profile_your_vote)
-                    .format(it.getRatingStars())
-        }
+        VoteDAO.getVote(userId, category.userId, category.categoryName,
+                onSuccess = {
+                    holder.userVoteTextView.text = mContext
+                            .getString(R.string.contact_profile_your_vote)
+                            .format(it.getRatingStars())
+                },
+                onFailure = {
+                    println("Could not get the vote")
+                }
+        )
     }
 
     private fun removeLayout(layout: FrameLayout) {
@@ -56,14 +62,24 @@ class ContactCategoryAdapter constructor(
     }
 
     private fun updateCategory(category: Category, position: Int) {
-        CategoryDAO.getCategoryForUser(category.userId, category.categoryName) {
-            document ->
-            if (document.exists()) {
-                val newCategory = document.toObject(Category::class.java)
-                categoryList[position] = newCategory!!
-                this.notifyItemChanged(position)
-            }
-        }
+        CategoryDAO.getCategoryForUser(
+                category.userId,
+                category.categoryName,
+                onSuccess = {
+                    document ->
+                    if (document.exists()) {
+                        val newCategory = document.toObject(Category::class.java)
+                        categoryList[position] = newCategory!!
+                        this.notifyItemChanged(position)
+                    }
+                },
+                onFailure = {
+                    Toast.makeText(
+                            mContext,
+                            mContext.getString(R.string.contact_profile_could_not_update_category),
+                            Toast.LENGTH_SHORT
+                    ).show()
+                })
     }
 
     private fun submitRating(layout: FrameLayout, rating: Float, category: Category, position: Int ) {
@@ -73,11 +89,20 @@ class ContactCategoryAdapter constructor(
                 rating.toInt(),
                 userId,
                 category.userId,
-                category.categoryName
-        ) {
-            updateCategory(category, position)
-            progressLayout.visibility = View.GONE
-        }
+                category.categoryName,
+                onSuccess = {
+                    updateCategory(category, position)
+                    progressLayout.visibility = View.GONE
+                },
+                onFailure = {
+                    Toast.makeText(
+                            mContext,
+                            mContext.getString(R.string.contact_profile_could_not_update_vote),
+                            Toast.LENGTH_SHORT
+                    ).show()
+                    progressLayout.visibility = View.GONE
+                }
+        )
         removeLayout(layout)
     }
 

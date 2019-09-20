@@ -14,7 +14,14 @@ private constructor() {
         if (user == null) {
             val currentUser = FirebaseAuth.getInstance().currentUser
             if (currentUser != null) {
-                UserDAO.getUser(currentUser.uid) { this.user = it }
+                UserDAO.getUser(currentUser.uid,
+                        onSuccess = {
+                            this.user = it
+                        },
+                        onFailure = {
+                            println("Could not load user")
+                        }
+                )
             }
         }
     }
@@ -23,10 +30,15 @@ private constructor() {
         if (user == null) {
             val currentUser = FirebaseAuth.getInstance().currentUser
             if (currentUser != null) {
-                UserDAO.getUser(currentUser.uid) {
-                    this.user = it
-                    callback(it)
-                }
+                UserDAO.getUser(currentUser.uid,
+                        onSuccess = {
+                            this.user = it
+                            callback(it)
+                        },
+                        onFailure = {
+                            println("Could not load user")
+                        }
+                )
             }
         }
     }

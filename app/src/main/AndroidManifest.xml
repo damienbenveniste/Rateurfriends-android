@@ -34,13 +34,19 @@
         <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".login.LoginActivity" />
-        <activity android:name=".login.InfoCollectionActivity" />
+        <activity android:name=".login.LoginActivity"/>
+        <activity
+            android:name=".login.InfoCollectionActivity"
+            android:theme="@style/LoginTheme"/>
         <activity
             android:name=".InviteFriendsActivity"
             android:label="Invite your Friends"
             android:theme="@style/LoginTheme" />
         <activity android:name=".ContactProfileActivity" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

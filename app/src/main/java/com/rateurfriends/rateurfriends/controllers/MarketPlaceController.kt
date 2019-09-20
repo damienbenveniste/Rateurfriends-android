@@ -1,6 +1,7 @@
 package com.rateurfriends.rateurfriends.controllers
 
 import android.view.View
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.billingclient.api.*
 import com.google.firebase.auth.FirebaseAuth
@@ -115,42 +116,64 @@ class MarketPlaceController(var fragment: MarketPlaceFragment) {
             if (sku in Product.spareStarsMap.keys) {
                 UserDAO.incrementSpareStarsForUser(
                         userId,
-                        Product.spareStarsMap.getValue(sku)) {
+                        Product.spareStarsMap.getValue(sku),
+                        onSuccess = {
+                            if (Globals.getInstance().user != null) {
+                                Globals.getInstance().user!!.spareStars +=
+                                        Product.spareStarsMap.getValue(sku)
 
-                    if (Globals.getInstance().user != null) {
-                        Globals.getInstance().user!!.spareStars +=
-                                Product.spareStarsMap.getValue(sku)
-
-                        fragment.spareStarTextView!!.text = fragment
-                                .getString(R.string.market_place_spare_stars_text_view)
-                                .format(Globals.getInstance().user!!.spareStars)
-                    }
-                    fragment.progressLayout!!.visibility = View.GONE
-                }
+                                fragment.spareStarTextView!!.text = fragment
+                                        .getString(R.string.market_place_spare_stars_text_view)
+                                        .format(Globals.getInstance().user!!.spareStars)
+                            }
+                            fragment.progressLayout!!.visibility = View.GONE
+                        },
+                        onFailure = {
+                            fragment.progressLayout!!.visibility = View.GONE
+                            Toast.makeText(
+                                    fragment.context,
+                                    fragment.getString(R.string.market_place_could_not_update_stars),
+                                    Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                )
 
             }
             else if (sku in Product.spareCategoriesMap.keys) {
                 UserDAO.incrementSpareCategoriesForUser(
                         userId,
-                        Product.spareCategoriesMap.getValue(sku)) {
+                        Product.spareCategoriesMap.getValue(sku),
+                        onSuccess = {
+                            if (Globals.getInstance().user != null) {
+                                Globals.getInstance().user!!.spareCategories +=
+                                        Product.spareCategoriesMap.getValue(sku)
+                                fragment.spareCategoryTextView!!.text = fragment
+                                        .getString(R.string.market_place_spare_categories_text_view)
+                                        .format(Globals.getInstance().user!!.spareCategories)
 
-                    if (Globals.getInstance().user != null) {
-                        Globals.getInstance().user!!.spareCategories +=
-                                Product.spareCategoriesMap.getValue(sku)
-                        fragment.spareCategoryTextView!!.text = fragment
-                                .getString(R.string.market_place_spare_categories_text_view)
-                                .format(Globals.getInstance().user!!.spareCategories)
-
-                    }
-                    fragment.progressLayout!!.visibility = View.GONE
-                }
+                            }
+                            fragment.progressLayout!!.visibility = View.GONE
+                        },
+                        onFailure = {
+                            fragment.progressLayout!!.visibility = View.GONE
+                            Toast.makeText(
+                                    fragment.context,
+                                    fragment.getString(R.string.market_place_could_not_update_categories),
+                                    Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                )
             }
             val product = Product(
                     userId = userId,
                     productId = sku,
                     price=if (skuMap != null) skuMap!!.getValue(sku).price else ""
             )
-            PurchaseDAO.capturePurchase(product)
+            PurchaseDAO.capturePurchase(product,
+                    onFailure = {
+                        println("Could not capture the payment")
+                    }
+            )
             allowMultiplePurchases(purchases)
         }
     }

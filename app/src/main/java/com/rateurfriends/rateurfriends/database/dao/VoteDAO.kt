@@ -26,15 +26,12 @@ class VoteDAO {
             return instance!!
         }
 
-
-//        private fun getVoteId(userId: String, contactId: String, category: String): String {
-//            return userId + "_" + contactId + "_" + category
-//        }
-
         fun updateVoteForUser(rating: Int,
                               userId: String,
                               contactId: String,
-                              categoryName: String, callback: () -> Unit) {
+                              categoryName: String,
+                              onSuccess: () -> Unit,
+                              onFailure: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
 
@@ -211,10 +208,9 @@ class VoteDAO {
 
                 null
             }.addOnSuccessListener {
-                callback()
+                onSuccess()
             }.addOnFailureListener {
-                println("could not write")
-                println(it)
+                onFailure()
             }
 
 
@@ -223,7 +219,8 @@ class VoteDAO {
         fun getVote(userId: String,
                     contactId: String,
                     categoryName: String,
-                    callback: (Vote) -> Unit) {
+                    onSuccess: (Vote) -> Unit,
+                    onFailure: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
 
@@ -236,8 +233,10 @@ class VoteDAO {
                         .get()
                         .addOnSuccessListener {
                             if (it.exists() && it != null) {
-                                callback(it.toObject(Vote::class.java)!!)
+                                onSuccess(it.toObject(Vote::class.java)!!)
                             }
+                        }.addOnFailureListener {
+                            onFailure()
                         }
             }
 

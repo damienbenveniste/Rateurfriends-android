@@ -92,19 +92,24 @@ class InviteFriendsController(val activity: Activity, val progressLayout: FrameL
         progressLayout.visibility = View.VISIBLE
         warningLayout.visibility = View.VISIBLE
 
-        UserDAO.getInvitedContactsForUser(Globals.getInstance().user!!.userId) {
-            val invitedPhoneSet = it.map{ contact -> contact.phoneNumber }.toSet()
-            val contentResolver = activity.contentResolver
-            val runner = AsyncTaskRunner(
-                    contentResolver,
-                    invitedPhoneSet,
-                    map,
-                    adapter,
-                    progressLayout
-            )
+        UserDAO.getInvitedContactsForUser(Globals.getInstance().user!!.userId,
+                onSuccess = {
+                    val invitedPhoneSet = it.map{ contact -> contact.phoneNumber }.toSet()
+                    val contentResolver = activity.contentResolver
+                    val runner = AsyncTaskRunner(
+                            contentResolver,
+                            invitedPhoneSet,
+                            map,
+                            adapter,
+                            progressLayout
+                    )
 
-            runner.execute()
-        }
+                    runner.execute()
+                },
+                onFailure = {
+                    println("Could not get invited contacts")
+                }
+        )
 
     }
 
@@ -186,29 +191,38 @@ class InviteFriendsController(val activity: Activity, val progressLayout: FrameL
 
             val userId = Globals.getInstance().user!!.userId
             contactMap.forEach {
-                UserDAO.checkUserExistWithPhone(it.value.phoneNumber) {
-                    documentSnapshots ->
-                    if (!documentSnapshots.isEmpty) {
-                        val document = documentSnapshots.documents.firstOrNull()
-                        if (document != null) {
+                UserDAO.checkUserExistWithPhone(it.value.phoneNumber,
+                        onSuccess = {
+                            documentSnapshots ->
+                            if (!documentSnapshots.isEmpty) {
+                                val document = documentSnapshots.documents.firstOrNull()
+                                if (document != null) {
 
-                            val user = document.toObject(User::class.java)!!
+                                    val user = document.toObject(User::class.java)!!
 
-                            if (contactMap.containsKey(user.phoneNumber)) {
+                                    if (contactMap.containsKey(user.phoneNumber)) {
 
-                                contactMap[user.phoneNumber]!!.knownUser = true
-                                contactMap[user.phoneNumber]!!.userId = user.userId
+                                        contactMap[user.phoneNumber]!!.knownUser = true
+                                        contactMap[user.phoneNumber]!!.userId = user.userId
 
-                                contactAdapter.notifyItemChanged(
-                                        ArrayList(contactMap.keys).indexOf(user.phoneNumber)
-                                )
+                                        contactAdapter.notifyItemChanged(
+                                                ArrayList(contactMap.keys).indexOf(user.phoneNumber)
+                                        )
 
-                                UserDAO.insertNewContact(contactMap[user.phoneNumber]!!, userId)
+                                        UserDAO.insertNewContact(contactMap[user.phoneNumber]!!, userId,
+                                                onFailure = {
+                                                    println("Contact could not be added")
+                                                }
+                                        )
+                                    }
+
+                                }
                             }
-
+                        },
+                        onFailure = {
+                            println("Could not check if user exits")
                         }
-                    }
-                }
+                )
             }
         }
     }

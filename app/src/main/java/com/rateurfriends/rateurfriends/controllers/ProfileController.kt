@@ -204,14 +204,21 @@ class ProfileController(
     ) {
         categoryNameList.clear()
         if (query.isNotEmpty()) {
-            CategoryDAO.queryCategory(query.toString().toLowerCase()) {
-
-                for (document in it) {
-                    categoryNameList.add(document.id)
-                }
-                adapter.notifyDataSetChanged()
-
-            }
+            CategoryDAO.queryCategory(query.toString().toLowerCase(),
+                    onSuccess = {
+                        for (document in it) {
+                            categoryNameList.add(document.id)
+                        }
+                        adapter.notifyDataSetChanged()
+                    },
+                    onFailure = {
+                        Toast.makeText(
+                                fragment.context,
+                                fragment.getString(R.string.hall_of_fame_problem_finding_qualities),
+                                Toast.LENGTH_SHORT
+                        ).show()
+                    }
+            )
         } else {
             adapter.notifyDataSetChanged()
         }
@@ -314,20 +321,27 @@ class ProfileController(
 
     fun getCategories(rvCategories: RecyclerView) {
         val userId = FirebaseAuth.getInstance().currentUser!!.uid
-        CategoryDAO.getCategoriesForUser(userId) {
+        CategoryDAO.getCategoriesForUser(userId,
+                onSuccess = {
+                    fragment.progressLayout!!.visibility = View.GONE
 
-            fragment.progressLayout!!.visibility = View.GONE
+                    for (doc in it) {
+                        val category = doc.toObject(Category::class.java)
+                        categoryList.add(category)
+                    }
 
-            for (doc in it) {
-                val category = doc.toObject(Category::class.java)
-                categoryList.add(category)
-            }
-
-            categoriesAdapter = ProfileCategoryAdapter(userId, categoryList, fragment)
-            rvCategories.adapter = categoriesAdapter
-            rvCategories.layoutManager = LinearLayoutManager(fragment.activity!!)
-        }
-
+                    categoriesAdapter = ProfileCategoryAdapter(userId, categoryList, fragment)
+                    rvCategories.adapter = categoriesAdapter
+                    rvCategories.layoutManager = LinearLayoutManager(fragment.activity!!)
+                },
+                onFailure = {
+                    Toast.makeText(
+                            fragment.activity!!,
+                            fragment.getString(R.string.contact_profile_could_not_get_qualities),
+                            Toast.LENGTH_LONG
+                    ).show()
+                }
+        )
     }
 
     fun getTextChangedListener(): TextWatcher {
@@ -340,8 +354,6 @@ class ProfileController(
         val addCategoryLayout = fragment.addCategoryLayout
         val spareCategoriesTextView = fragment.spareCategoriesTextView
 
-        fragment.progressLayout!!.visibility = View.VISIBLE
-
         if (addCategoryEditText == null ||
                 addCategoryLayout == null ||
                 spareCategoriesTextView == null ||
@@ -353,37 +365,71 @@ class ProfileController(
                 Globals.getInstance().user!!.spareCategories > 0) {
 
             val category = Category(
-                    addCategoryEditText.text.toString().toLowerCase(),
+                    addCategoryEditText.text.toString().toLowerCase().trim(),
                     Globals.getInstance().user!!.userId
             )
 
-            CategoryDAO.insertCategoryForUser(category, Globals.getInstance().user!!) {
+            fragment.progressLayout!!.visibility = View.VISIBLE
 
-                val increment = -1
-                UserDAO.incrementSpareCategoriesForUser(
-                        Globals.getInstance().user!!.userId,
-                        increment
-                ) {
+            CategoryDAO.insertCategoryForUser(category, Globals.getInstance().user!!,
+                    onSuccess = {
+                        val increment = -1
+                        UserDAO.incrementSpareCategoriesForUser(
+                                Globals.getInstance().user!!.userId,
+                                increment,
+                                onSuccess = {
+                                    fragment.progressLayout!!.visibility = View.GONE
 
-                    fragment.progressLayout!!.visibility = View.GONE
+                                    categoryList.add(0, category)
+                                    categoriesAdapter!!.notifyItemInserted(0)
+                                    addCategoryLayout.visibility = View.GONE
 
-                    categoryList.add(0, category)
-                    categoriesAdapter!!.notifyItemInserted(0)
-                    addCategoryLayout.visibility = View.GONE
+                                    Globals.getInstance().user!!.spareCategories += increment
 
-                    Globals.getInstance().user!!.spareCategories += increment
+                                    spareCategoriesTextView.text = fragment
+                                            .getString(R.string.profile_spare_categories_text_view)
+                                            .format(Globals.getInstance().user!!.spareCategories)
 
-                    spareCategoriesTextView.text = fragment
-                            .getString(R.string.profile_spare_categories_text_view)
-                            .format(Globals.getInstance().user!!.spareCategories)
+                                    if (Globals.getInstance().user!!.spareCategories <= 0) {
+                                        fragment.submitCategoryButton!!.isEnabled = false
+                                    }
+                                },
+                                onFailure = {
+                                    fragment.progressLayout!!.visibility = View.GONE
+                                    println("Could not remove category")
+                                }
+                        )
 
-                    if (Globals.getInstance().user!!.spareCategories <= 0) {
-                        fragment.submitCategoryButton!!.isEnabled = false
+                        FeedDAO.addCategoryFeed(category.categoryName)
+
+                    },
+                    onFailure = {
+                        fragment.progressLayout!!.visibility = View.GONE
+                        Toast.makeText(
+                                fragment.activity!!,
+                                fragment.getString(R.string.profile_could_not_insert_quality),
+                                Toast.LENGTH_LONG
+                        ).show()
+
+                    },
+                    onKnownCategory = {
+                        fragment.progressLayout!!.visibility = View.GONE
+                        Toast.makeText(
+                                fragment.activity!!,
+                                fragment.getString(R.string.profile_known_quality),
+                                Toast.LENGTH_LONG
+                        ).show()
+
                     }
-
-                }
-
-                FeedDAO.addCategoryFeed(category.categoryName)
+            )
+        } else {
+            val categoryName = addCategoryEditText.text.toString().toLowerCase().trim()
+            if (categoryName in categoryList.map {it.categoryName.toLowerCase()}) {
+                Toast.makeText(
+                        fragment.activity!!,
+                        fragment.getString(R.string.profile_known_quality),
+                        Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
@@ -391,8 +437,8 @@ class ProfileController(
     private fun validateCategory(editText: EditText): Boolean {
 
         if (editText.text.isNotEmpty()) {
-            val categoryName = editText.text.toString()
-            return categoryName !in categoryList.map {it.categoryName}
+            val categoryName = editText.text.toString().toLowerCase().trim()
+            return categoryName !in categoryList.map {it.categoryName.toLowerCase()}
         }
         return false
     }

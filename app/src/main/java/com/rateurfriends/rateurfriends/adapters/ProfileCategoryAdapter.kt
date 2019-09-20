@@ -4,10 +4,7 @@ package com.rateurfriends.rateurfriends.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.FrameLayout
-import android.widget.RatingBar
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.widget.AppCompatButton
 import androidx.recyclerview.widget.RecyclerView
 import com.rateurfriends.rateurfriends.R
@@ -58,14 +55,26 @@ class ProfileCategoryAdapter constructor(
     }
 
     private fun updateCategory(category: Category, position: Int) {
-        CategoryDAO.getCategoryForUser(category.userId, category.categoryName) {
-            document ->
-            if (document.exists()) {
-                val newCategory = document.toObject(Category::class.java)
-                categoryList[position] = newCategory!!
-                this.notifyItemChanged(position)
-            }
-        }
+        CategoryDAO.getCategoryForUser(
+                category.userId,
+                category.categoryName,
+                onSuccess = {
+                    document ->
+                    if (document.exists()) {
+                        val newCategory = document.toObject(Category::class.java)
+                        categoryList[position] = newCategory!!
+                        this.notifyItemChanged(position)
+                    }
+                },
+                onFailure = {
+                    Toast.makeText(
+                            fragment.context,
+                            fragment.getString(R.string.profile_could_not_update_category),
+                            Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+        )
     }
 
     private fun removeLayout(layout: FrameLayout, integerButton: IntegerButton, reset: Boolean=true) {
