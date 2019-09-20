@@ -114,8 +114,8 @@
     <!--Feed Fragment-->
 
     <string name="feed_title">Feed</string>
-    <string name="feed_switch_on">Feed</string>
-    <string name="feed_switch_off">Feed</string>
+    <string name="feed_switch_on">Friends Only</string>
+    <string name="feed_switch_off">All</string>
 
     <string name="feed_level_passed">Level Passed!</string>
     <string name="feed_more_stars">More Stars!</string>
