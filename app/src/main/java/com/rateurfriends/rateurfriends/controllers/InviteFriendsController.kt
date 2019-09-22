@@ -22,6 +22,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import android.widget.TextView
 import com.rateurfriends.rateurfriends.R
+import java.text.SimpleDateFormat
 
 
 class InviteFriendsController(val activity: Activity, val progressLayout: FrameLayout) {
@@ -105,6 +106,19 @@ class InviteFriendsController(val activity: Activity, val progressLayout: FrameL
                     )
 
                     runner.execute()
+
+                    val prefs = activity.getSharedPreferences(
+                            activity.getString(R.string.shared_preference_file),
+                            Context.MODE_PRIVATE
+                    )
+
+                    val sdf = SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.US)
+                    val now = Date()
+
+                    prefs.edit()
+                            .putString("last_time_check_friends", sdf.format(now))
+                            .apply();
+
                 },
                 onFailure = {
                     println("Could not get invited contacts")

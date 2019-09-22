@@ -73,7 +73,7 @@ class ContactProfileController(
 
                         for (doc in documents) {
                             val category = doc.toObject(Category::class.java)
-                            if (category.publicVisibility) {
+                            if (category.public) {
                                 categoryList.add(category)
                             }
                         }

@@ -14,7 +14,7 @@ class Category(
 
         val userId: String = "",
 
-        var publicVisibility: Boolean = true,
+        var public: Boolean = true,
 
         var starNumber: Int = 5,
 
@@ -38,9 +38,9 @@ class Category(
 
     @Exclude
     fun changePublicVisibility(userId: String) {
-        CategoryDAO.setPublicVisibility(this, userId, !this.publicVisibility,
+        CategoryDAO.setPublicVisibility(this, userId, !this.public,
                 onSuccess = {
-                    this.publicVisibility = !this.publicVisibility
+                    this.public = !this.public
                 },
                 onFailure = {
                     println("Network issues")

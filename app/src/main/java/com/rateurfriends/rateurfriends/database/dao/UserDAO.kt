@@ -92,7 +92,7 @@ class UserDAO {
                     if (user.country.isNotEmpty()) {
 
                         val countryCategoryRef = db
-                                .collection("Country")
+                                .collection("CategoryCountry")
                                 .document(user.country)
                                 .collection("Category")
                                 .document(oldCategory.categoryName)
@@ -153,7 +153,7 @@ class UserDAO {
 
                 if (user.country.isNotEmpty()) {
                     val countryCategoryRef = db
-                            .collection("Country")
+                            .collection("CategoryCountry")
                             .document(user.country)
                             .collection("Category")
                             .document(it.categoryName)
@@ -163,7 +163,7 @@ class UserDAO {
                     batch.set(countryCategoryRef, it)
 
                     batch.set(
-                            db.collection("Country")
+                            db.collection("CategoryCountry")
                                     .document(user.country)
                                     .collection("Category")
                                     .document(it.categoryName),
@@ -368,6 +368,7 @@ class UserDAO {
                                 onSuccess(it.map{u -> u.toObject(User::class.java)})
                             }
                         }.addOnFailureListener {
+                            println(it)
                             onFailure()
                         }
 

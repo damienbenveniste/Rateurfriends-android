@@ -77,7 +77,7 @@ class VoteDAO {
                     val contact = snapshotUser.toObject(User::class.java)!!
 
                     val countryCategoryRef = db
-                            .collection("Country")
+                            .collection("CategoryCountry")
                             .document(contact.country)
                             .collection("Category")
                             .document(categoryName)

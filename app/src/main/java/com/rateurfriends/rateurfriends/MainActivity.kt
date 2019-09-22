@@ -1,10 +1,15 @@
 package com.rateurfriends.rateurfriends
 
+import android.content.ContentResolver
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
+import android.provider.ContactsContract
+import android.telephony.PhoneNumberUtils
 import android.view.MenuItem
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
@@ -20,9 +25,15 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import com.google.android.material.navigation.NavigationView
-import android.widget.Toast
-import com.rateurfriends.rateurfriends.controllers.PictureController
 import com.rateurfriends.rateurfriends.database.dao.PictureDAO
+import com.rateurfriends.rateurfriends.database.dao.UserDAO
+import com.rateurfriends.rateurfriends.helperClasses.Globals
+import com.rateurfriends.rateurfriends.models.Contact
+import java.util.*
+import kotlin.collections.LinkedHashMap
+import com.rateurfriends.rateurfriends.models.User
+import java.text.ParseException
+import java.text.SimpleDateFormat
 
 
 class MainActivity : AppCompatActivity(),
@@ -131,6 +142,35 @@ class MainActivity : AppCompatActivity(),
         navigation.itemIconTintList = null
         navigation.selectedItemId = R.id.navigation_friends_feed
 
+        val prefs = this.getSharedPreferences(
+                this.getString(R.string.shared_preference_file),
+                Context.MODE_PRIVATE
+        )
+
+        val sdf = SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.US)
+
+        try {
+            val now = Date()
+            val date = sdf.parse(prefs.getString(
+                    "last_time_check_friends",
+                    sdf.format(now)))
+
+            val diff = now.time - date.time
+            val diffDays = diff / (24 * 60 * 60 * 1000)
+
+            if (diffDays > 7) {
+                val runner = AsyncTaskRunner(contentResolver)
+                runner.execute()
+
+                prefs.edit()
+                        .putString("last_time_check_friends", sdf.format(now))
+                        .apply()
+            }
+
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -176,5 +216,99 @@ class MainActivity : AppCompatActivity(),
 
     override fun onFragmentInteraction(title: String) {
         supportActionBar!!.title = title
+    }
+
+    class AsyncTaskRunner(
+            private val contentResolver: ContentResolver
+    ): AsyncTask<Void, Int, String>() {
+
+        private val contactMap: LinkedHashMap<String, Contact> = linkedMapOf()
+        private val CONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI
+        private val PROJECTION = arrayOf(
+                ContactsContract.Contacts.DISPLAY_NAME,
+                ContactsContract.CommonDataKinds.Phone.NUMBER
+        )
+
+        override fun doInBackground(vararg params: Void?): String? {
+
+            val cursor = contentResolver
+                    .query(
+                            CONTENT_URI,
+                            PROJECTION,
+                            "HAS_PHONE_NUMBER <> 0",
+                            null,
+                            null
+                    )
+
+            if (cursor != null) {
+
+                val displayNameIndex = cursor.getColumnIndex(
+                        ContactsContract.Contacts.DISPLAY_NAME
+                )
+                val phoneIndex = cursor.getColumnIndex(
+                        ContactsContract.CommonDataKinds.Phone.NUMBER
+                )
+
+                while (cursor.moveToNext()) {
+
+                    val displayName = cursor.getString(displayNameIndex)
+                    var phoneNumber = cursor.getString(phoneIndex)
+                    phoneNumber = PhoneNumberUtils.formatNumberToE164(
+                            phoneNumber,
+                            Locale.getDefault().country
+                    )
+
+                    if (phoneNumber != null &&
+                            phoneNumber != Globals.getInstance().user!!.phoneNumber) {
+
+                        val contact = Contact(displayName, phoneNumber)
+                        contactMap[phoneNumber] = contact
+
+                    }
+                }
+                cursor.close()
+            }
+
+
+            return null
+        }
+
+
+        override fun onPostExecute(result: String?) {
+            super.onPostExecute(result)
+
+            val userId = Globals.getInstance().user!!.userId
+            contactMap.forEach {
+                UserDAO.checkUserExistWithPhone(it.value.phoneNumber,
+                        onSuccess = {
+                            documentSnapshots ->
+                            if (!documentSnapshots.isEmpty) {
+                                val document = documentSnapshots.documents.firstOrNull()
+                                if (document != null) {
+
+                                    val user = document.toObject(User::class.java)!!
+
+                                    if (contactMap.containsKey(user.phoneNumber)) {
+
+                                        contactMap[user.phoneNumber]!!.userId = user.userId
+
+                                        UserDAO.insertNewContact(
+                                                contactMap[user.phoneNumber]!!,
+                                                userId,
+                                                onFailure = {
+                                                    println("Contact could not be added")
+                                                }
+                                        )
+                                    }
+
+                                }
+                            }
+                        },
+                        onFailure = {
+                            println("Could not check if user exits")
+                        }
+                )
+            }
+        }
     }
 }

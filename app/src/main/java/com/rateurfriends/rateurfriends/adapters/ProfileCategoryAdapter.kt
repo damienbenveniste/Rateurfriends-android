@@ -35,7 +35,7 @@ class ProfileCategoryAdapter constructor(
                 .getString(R.string.mean_star_format)
                 .format(category.meanStarNumber)
 
-        holder.publicCheckbox.isChecked = category.publicVisibility
+        holder.publicCheckbox.isChecked = category.public
         holder.startRatingView.rating = category.meanStarNumber
         holder.starNumberTextView.text = fragment
                 .getString(R.string.star_number_format)

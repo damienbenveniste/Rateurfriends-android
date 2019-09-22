@@ -11,6 +11,9 @@
     <string name="title_market_place">Market</string>
     <string name="title_search">Contacts</string>
 
+    <string name="privacy_policy_url">https://www.rateurfriends.com/privacy</string>
+    <string name="term_and_condition_url">https://www.rateurfriends.com/terms-and-conditions</string>
+
 
     <!--Login Activity-->
 

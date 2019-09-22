@@ -79,8 +79,8 @@ class LoginController(
                         .setIsSmartLockEnabled(!BuildConfig.DEBUG)
                         .setAvailableProviders(providers)
                         .setTosAndPrivacyPolicyUrls(
-                                "link to app terms and service",
-                                "link to app privacy policy")
+                                activity.getString(R.string.term_and_condition_url),
+                                activity.getString(R.string.privacy_policy_url))
                             .setTheme(R.style.LoginTheme)
                         .build(),
                 SIGN_IN)

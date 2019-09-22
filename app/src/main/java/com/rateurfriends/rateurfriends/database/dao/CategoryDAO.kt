@@ -91,7 +91,7 @@ class CategoryDAO {
 
                             if (user.country.isNotEmpty()) {
 
-                                val countryCategoryRef = db.collection("Country")
+                                val countryCategoryRef = db.collection("CategoryCountry")
                                         .document(user.country)
                                         .collection("Category")
                                         .document(category.categoryName)
@@ -101,7 +101,7 @@ class CategoryDAO {
                                 batch.set(countryCategoryRef, category)
 
                                 batch.set(
-                                        db.collection("Country")
+                                        db.collection("CategoryCountry")
                                                 .document(user.country)
                                                 .collection("Category")
                                                 .document(category.categoryName),
@@ -158,7 +158,7 @@ class CategoryDAO {
 
         fun setPublicVisibility(category: Category,
                                 userId: String,
-                                publicVisibility: Boolean,
+                                public: Boolean,
                                 onSuccess: () -> Unit,
                                 onFailure: () -> Unit) {
 
@@ -175,8 +175,8 @@ class CategoryDAO {
                     .collection("User")
                     .document(userId)
 
-            batch.update(refAttribute, "publicVisibility", publicVisibility)
-            batch.update(refCategory, "publicVisibility", publicVisibility)
+            batch.update(refAttribute, "public", public)
+            batch.update(refCategory, "public", public)
 
             batch.commit()
                     .addOnSuccessListener {
@@ -201,7 +201,7 @@ class CategoryDAO {
 
             if (local && country != null && country.isNotEmpty()) {
 
-                db.collection("Country")
+                db.collection("CategoryCountry")
                         .document(country)
                         .collection("Category")
                         .document(category)
@@ -262,7 +262,7 @@ class CategoryDAO {
 
             if (local && country != null && country.isNotEmpty()) {
 
-                db.collection("Country")
+                db.collection("CategoryCountry")
                         .document(country)
                         .collection("Category")
                         .orderBy("count", Query.Direction.DESCENDING)
@@ -274,7 +274,7 @@ class CategoryDAO {
                                 for (document in snapshot.documents) {
                                     val category = document.id
 
-                                    db.collection("Country")
+                                    db.collection("CategoryCountry")
                                             .document(country)
                                             .collection("Category")
                                             .document(category)

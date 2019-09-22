@@ -37,6 +37,8 @@ class UserRankingAdapter constructor(
                 .getString(R.string.star_number_format)
                 .format(user.totalStarNumber)
 
+        holder.phoneNameTextView.visibility = View.GONE
+
         holder.starMeanTextView.text = fragment
                 .getString(R.string.mean_star_format)
                 .format(user.meanStarNumber)
@@ -54,6 +56,7 @@ class UserRankingAdapter constructor(
     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         internal val contactNameTextView: TextView  = itemView.findViewById(R.id.tv_contact_name)
+        internal var phoneNameTextView: TextView = itemView.findViewById(R.id.tv_phone_name)
         internal var profilePictureImageView: ImageView = itemView.findViewById(
                 R.id.iv_picture_contact)
         internal var startRatingView: RatingBar = itemView.findViewById(R.id.star_rating)
