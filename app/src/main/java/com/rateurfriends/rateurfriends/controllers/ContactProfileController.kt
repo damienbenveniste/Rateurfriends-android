@@ -66,7 +66,8 @@ class ContactProfileController(
     fun getCategories(contact: User, rvCategories: RecyclerView) {
         val userId = contact.userId
         activity.progressLayout!!.visibility = View.VISIBLE
-        CategoryDAO.getCategoriesForUser(userId,
+        activity.emptyLayout!!.visibility = View.GONE
+        CategoryDAO.getPublicCategoriesForUser(userId,
                 onSuccess = {
                     documents ->
                     if (!documents.isEmpty) {
@@ -98,6 +99,10 @@ class ContactProfileController(
                             activity.getString(R.string.contact_profile_could_not_get_qualities),
                             Toast.LENGTH_SHORT
                     ).show()
+                },
+                onEmpty = {
+                    activity.progressLayout!!.visibility = View.GONE
+                    activity.emptyLayout!!.visibility = View.VISIBLE
                 }
         )
 

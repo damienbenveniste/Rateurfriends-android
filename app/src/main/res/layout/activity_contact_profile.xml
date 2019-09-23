@@ -157,6 +157,23 @@
                 android:layout_marginRight="20dp"
                 android:layout_height="wrap_content"/>
 
+            <LinearLayout
+                android:id="@+id/empty_layout"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_gravity="center"
+                    android:id="@+id/tv_empty"
+                    android:text="@string/contact_profile_no_quality"
+                    android:textAlignment="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
 
@@ -179,5 +196,6 @@
             android:layout_height="wrap_content" />
 
     </FrameLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

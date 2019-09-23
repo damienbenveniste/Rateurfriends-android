@@ -33,6 +33,11 @@ class VoteDAO {
                               onSuccess: () -> Unit,
                               onFailure: () -> Unit) {
 
+            if (userId.isEmpty() || contactId.isEmpty() || categoryName.isEmpty()) {
+                onFailure()
+                return
+            }
+
             val db = FirebaseFirestore.getInstance()
 
             if (userId.isEmpty() || contactId.isEmpty() || categoryName.isEmpty()) {
@@ -221,6 +226,11 @@ class VoteDAO {
                     categoryName: String,
                     onSuccess: (Vote) -> Unit,
                     onFailure: () -> Unit) {
+
+            if (userId.isEmpty() || contactId.isEmpty() || categoryName.isEmpty()) {
+                onFailure()
+                return
+            }
 
             val db = FirebaseFirestore.getInstance()
 

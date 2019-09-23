@@ -29,6 +29,11 @@ class CategoryDAO {
         fun queryCategory(query: String, onSuccess: (List<DocumentSnapshot>) -> Unit,
                           onFailure: () -> Unit) {
 
+            if (query.isEmpty()) {
+                onFailure()
+                return
+            }
+
             val queryValue = query.toLowerCase()
             val db = FirebaseFirestore.getInstance()
 
@@ -55,7 +60,11 @@ class CategoryDAO {
 
             val db = FirebaseFirestore.getInstance()
 
-            println(category.categoryName)
+            if (user.userId.isEmpty() || category.categoryName.isEmpty()) {
+
+                onFailure()
+                return
+            }
 
             db.collection("UserAttribute")
                     .document(user.userId)
@@ -125,7 +134,13 @@ class CategoryDAO {
 
         fun getCategoriesForUser(userId: String,
                                  onSuccess: (QuerySnapshot) -> Unit,
-                                 onFailure: () -> Unit) {
+                                 onFailure: () -> Unit,
+                                 onEmpty: () -> Unit) {
+
+            if (userId.isEmpty()) {
+                onFailure()
+                return
+            }
 
             val db = FirebaseFirestore.getInstance()
             db.collection("UserAttribute")
@@ -135,6 +150,35 @@ class CategoryDAO {
                     .addOnSuccessListener {
                         if (!it.isEmpty) {
                             onSuccess(it)
+                        } else {
+                            onEmpty()
+                        }
+                    }.addOnFailureListener {
+                        onFailure()
+                    }
+        }
+
+        fun getPublicCategoriesForUser(userId: String,
+                                 onSuccess: (QuerySnapshot) -> Unit,
+                                 onFailure: () -> Unit,
+                                 onEmpty: () -> Unit) {
+
+            if (userId.isEmpty()) {
+                onFailure()
+                return
+            }
+
+            val db = FirebaseFirestore.getInstance()
+            db.collection("UserAttribute")
+                    .document(userId)
+                    .collection("Category")
+                    .whereEqualTo("public", true)
+                    .get()
+                    .addOnSuccessListener {
+                        if (!it.isEmpty) {
+                            onSuccess(it)
+                        } else {
+                            onEmpty()
                         }
                     }.addOnFailureListener {
                         onFailure()
@@ -145,6 +189,11 @@ class CategoryDAO {
                                categoryName: String,
                                onSuccess: (DocumentSnapshot) -> Unit,
                                onFailure: () -> Unit) {
+
+            if (userId.isEmpty() || categoryName.isEmpty()) {
+                onFailure()
+                return
+            }
 
             val db = FirebaseFirestore.getInstance()
             db.collection("UserAttribute")
@@ -161,6 +210,11 @@ class CategoryDAO {
                                 public: Boolean,
                                 onSuccess: () -> Unit,
                                 onFailure: () -> Unit) {
+
+            if (category.categoryName.isEmpty() || userId.isEmpty()) {
+                onFailure()
+                return
+            }
 
             val db = FirebaseFirestore.getInstance()
             val batch = db.batch()
@@ -192,6 +246,11 @@ class CategoryDAO {
                                 local: Boolean,
                                 onSuccess: (List<Category>) -> Unit,
                                 onFailure: () -> Unit) {
+
+            if (category.isEmpty()) {
+                onFailure()
+                return
+            }
 
             val db = FirebaseFirestore.getInstance()
             val direction = if (descending) Query.Direction.DESCENDING else Query.Direction.ASCENDING
@@ -249,6 +308,7 @@ class CategoryDAO {
                                local: Boolean,
                                onSuccess: (String, List<Category>) -> Unit,
                                onFailure: () -> Unit) {
+
 
 
             val db = FirebaseFirestore.getInstance()

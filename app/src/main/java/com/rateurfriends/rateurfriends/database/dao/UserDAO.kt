@@ -7,6 +7,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.*
+import com.google.protobuf.Empty
 import com.rateurfriends.rateurfriends.R
 import com.rateurfriends.rateurfriends.helperClasses.Globals
 import com.rateurfriends.rateurfriends.models.Category
@@ -33,6 +34,11 @@ class UserDAO {
                                  category: Category,
                                  onSuccess: () -> Unit,
                                  onFailure: () -> Unit) {
+
+            if (userId.isEmpty() || category.categoryName.isEmpty()) {
+                onFailure()
+                return
+            }
 
             val db = FirebaseFirestore.getInstance()
             val categoryRef = db
@@ -121,6 +127,11 @@ class UserDAO {
                        onSuccess: () -> Unit,
                        onFailure: () -> Unit) {
 
+            if (user.userId.isEmpty() || categoryList.map { it.categoryName.isEmpty()}.any()) {
+                onFailure()
+                return
+            }
+
             val db = FirebaseFirestore.getInstance()
             val batch = db.batch()
 
@@ -188,6 +199,11 @@ class UserDAO {
                                        onSuccess: () -> Unit,
                                        onFailure: () -> Unit) {
 
+            if (userId.isEmpty()) {
+                onFailure()
+                return
+            }
+
             // TODO: there does not seem to be a need to keep in sync with Country/country/User
             val db = FirebaseFirestore.getInstance()
 
@@ -207,6 +223,11 @@ class UserDAO {
                                             onSuccess: () -> Unit,
                                             onFailure: () -> Unit) {
 
+            if (userId.isEmpty()) {
+                onFailure()
+                return
+            }
+
             val db = FirebaseFirestore.getInstance()
             db.collection("User")
                     .document(userId)
@@ -222,6 +243,11 @@ class UserDAO {
         fun getUser(userId: String,
                     onSuccess: (User) -> Unit,
                     onFailure: () -> Unit) {
+
+            if (userId.isEmpty()) {
+                onFailure()
+                return
+            }
 
             val db = FirebaseFirestore.getInstance()
             db.collection("User")
@@ -240,6 +266,11 @@ class UserDAO {
         fun insertNewContact(contact: Contact,
                              userId: String,
                              onFailure: () -> Unit) {
+
+            if (contact.userId.isEmpty() || userId.isEmpty()) {
+                onFailure()
+                return
+            }
 
             val db = FirebaseFirestore.getInstance()
             db.collection("UserAttribute")
@@ -271,7 +302,13 @@ class UserDAO {
 
         fun getContactsForUser(userId: String,
                                onSuccess: (QuerySnapshot) -> Unit,
-                               onFailure: () -> Unit) {
+                               onFailure: () -> Unit,
+                               onEmpty: () -> Unit) {
+
+            if (userId.isEmpty()) {
+                onFailure()
+                return
+            }
 
             val db = FirebaseFirestore.getInstance()
             db.collection("UserAttribute")
@@ -281,6 +318,8 @@ class UserDAO {
                     .addOnSuccessListener { documents ->
                         if (documents != null && !documents.isEmpty) {
                             onSuccess(documents)
+                        } else {
+                            onEmpty()
                         }
                     }
                     .addOnFailureListener {
@@ -291,6 +330,11 @@ class UserDAO {
         fun checkUserExistWithPhone(phoneNumber: String,
                                     onSuccess: (QuerySnapshot) -> Unit,
                                     onFailure: () -> Unit) {
+
+            if (phoneNumber.isEmpty()) {
+                onFailure()
+                return
+            }
 
             val db = FirebaseFirestore.getInstance()
             db.collection("User")
@@ -308,6 +352,11 @@ class UserDAO {
         fun checkUserExistWithUserId(userId: String, onSuccess: (Boolean) -> Unit,
                                      onFailure: () -> Unit) {
 
+            if (userId.isEmpty()) {
+                onFailure()
+                return
+            }
+
             val db = FirebaseFirestore.getInstance()
             db.collection("User")
                     .document(userId)
@@ -323,6 +372,11 @@ class UserDAO {
                        params: Map<String, Any?>,
                        onSuccess: (User) -> Unit,
                        onFailure: () -> Unit) {
+
+            if (userId.isEmpty()) {
+                onFailure()
+                return
+            }
 
             val db = FirebaseFirestore.getInstance()
             val userRef = db.collection("User")
@@ -394,6 +448,11 @@ class UserDAO {
                        onSuccess: () -> Unit,
                        onFailure: () -> Unit) {
 
+            if (userId.isEmpty() || contact.userId.isEmpty()) {
+                onFailure()
+                return
+            }
+
             val db = FirebaseFirestore.getInstance()
             val batch = db.batch()
             val inviteRef = db.collection("UserAttribute")
@@ -417,6 +476,11 @@ class UserDAO {
         fun getInvitedContactsForUser(userId: String,
                                       onSuccess: (List<Contact>) -> Unit,
                                       onFailure: () -> Unit) {
+
+            if (userId.isEmpty()) {
+                onFailure()
+                return
+            }
 
             val db = FirebaseFirestore.getInstance()
             db.collection("UserAttribute")

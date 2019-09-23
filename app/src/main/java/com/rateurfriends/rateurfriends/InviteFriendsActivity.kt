@@ -32,6 +32,7 @@ class InviteFriendsActivity : AppCompatActivity() {
 
     private val contactMap: LinkedHashMap<String, Contact> = linkedMapOf()
     private var contactAdapter: AllContactsAdapter? = null
+    private var emptyLayout: FrameLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +47,7 @@ class InviteFriendsActivity : AppCompatActivity() {
         progressLayout = findViewById(R.id.progress_layout)
         warningLayout = findViewById(R.id.layout_warning)
         confirmButton = findViewById(R.id.bt_confirm)
+        emptyLayout = findViewById(R.id.empty_layout)
 
         confirmButton!!.setOnClickListener {
             inviteFriendsController!!.removeView(warningLayout!!)
@@ -59,7 +61,7 @@ class InviteFriendsActivity : AppCompatActivity() {
         rvContacts!!.layoutManager = LinearLayoutManager(this)
 
 
-        inviteFriendsController = InviteFriendsController(this, progressLayout!!)
+        inviteFriendsController = InviteFriendsController(this, progressLayout!!, emptyLayout!!)
         inviteFriendsController!!.requestPermission(
                 contactMap,
                 contactAdapter!!,

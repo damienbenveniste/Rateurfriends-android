@@ -41,6 +41,11 @@ class PictureDAO {
         }
 
         fun saveProfilePictureFromBitmap(userId: String, bitmap: Bitmap, callback: (Task<Uri>) -> Unit) {
+
+            if (userId.isEmpty()) {
+                return
+            }
+
             val baos = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
             val data = baos.toByteArray()
@@ -57,6 +62,11 @@ class PictureDAO {
         }
 
         fun populateImageView(userId: String, imageView: ImageView, context: Context) {
+
+            if (userId.isEmpty()) {
+                return
+            }
+
             val gsReference = FirebaseStorage.getInstance().getReference("profile_pictures/" + userId)
             GlideApp
                     .with(context)
@@ -70,6 +80,11 @@ class PictureDAO {
         }
 
         fun populateImageViewWithUserId(userId: String, imageView: ImageView, context: Context) {
+
+            if (userId.isEmpty()) {
+                return
+            }
+
             val gsReference = FirebaseStorage.getInstance().getReference("profile_pictures/" + userId)
             GlideApp
                     .with(context)

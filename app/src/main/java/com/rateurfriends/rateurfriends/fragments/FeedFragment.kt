@@ -40,6 +40,7 @@ class FeedFragment : Fragment(),
     var feedAdapter: FeedAdapter? = null
     var feedButton: SwitchCompat? = null
     var progressLayout: FrameLayout? = null
+    var emptyLayout: FrameLayout? = null
 
     private var feedController: FeedController? = null
 
@@ -63,6 +64,7 @@ class FeedFragment : Fragment(),
         feedButton = view.findViewById(R.id.bt_feed_toggle) as SwitchCompat
         rvFeed = view.findViewById(R.id.rv_feed) as RecyclerView
         progressLayout = view.findViewById(R.id.progress_layout)
+        emptyLayout = view.findViewById(R.id.empty_layout)
 
         rvFeed!!.adapter = feedAdapter
         rvFeed!!.layoutManager = LinearLayoutManager(this.activity)
@@ -72,7 +74,6 @@ class FeedFragment : Fragment(),
         }
 
         feedController!!.changeFeedState()
-        progressLayout!!.visibility = View.VISIBLE
 
         return view
     }

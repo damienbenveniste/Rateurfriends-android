@@ -25,7 +25,9 @@ import com.rateurfriends.rateurfriends.R
 import java.text.SimpleDateFormat
 
 
-class InviteFriendsController(val activity: Activity, val progressLayout: FrameLayout) {
+class InviteFriendsController(val activity: Activity,
+                              val progressLayout: FrameLayout,
+                              val emptyLayout:FrameLayout) {
 
     private val PERMISSION_ALL = 79
     private val PERMISSIONS = arrayOf(
@@ -102,7 +104,8 @@ class InviteFriendsController(val activity: Activity, val progressLayout: FrameL
                             invitedPhoneSet,
                             map,
                             adapter,
-                            progressLayout
+                            progressLayout,
+                            emptyLayout
                     )
 
                     runner.execute()
@@ -132,7 +135,8 @@ class InviteFriendsController(val activity: Activity, val progressLayout: FrameL
             private val phoneSet: Set<String>,
             private val contactMap: LinkedHashMap<String, Contact>,
             private val contactAdapter: AllContactsAdapter,
-            private val progressLayout: FrameLayout
+            private val progressLayout: FrameLayout,
+            private val emptyLayout: FrameLayout
     ): AsyncTask<Void, Int, String>() {
 
         private val CONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI
@@ -202,6 +206,14 @@ class InviteFriendsController(val activity: Activity, val progressLayout: FrameL
             super.onPostExecute(result)
 
             contactAdapter.notifyDataSetChanged()
+            progressLayout.visibility = View.GONE
+
+            if (contactMap.isEmpty()) {
+                emptyLayout.visibility = View.VISIBLE
+
+            } else {
+                emptyLayout.visibility = View.GONE
+            }
 
             val userId = Globals.getInstance().user!!.userId
             contactMap.forEach {

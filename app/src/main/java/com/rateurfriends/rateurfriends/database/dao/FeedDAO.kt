@@ -21,7 +21,10 @@ class FeedDAO {
             return instance!!
         }
 
-        fun getTopFeed(onSuccess: (List<Feed>) -> Unit, onFailure: () -> Unit) {
+        fun getTopFeed(
+                onSuccess: (List<Feed>) -> Unit,
+                onFailure: () -> Unit,
+                onEmpty: () -> Unit) {
 
             val db = FirebaseFirestore.getInstance()
             val country = Globals.getInstance().user?.country
@@ -35,6 +38,8 @@ class FeedDAO {
                         .addOnSuccessListener { snapshot ->
                             if (!snapshot.isEmpty && snapshot != null) {
                                 onSuccess(snapshot.map { it.toObject(Feed::class.java) })
+                            } else {
+                                onEmpty()
                             }
                         }.addOnFailureListener {
                             onFailure()
@@ -48,6 +53,8 @@ class FeedDAO {
                         .addOnSuccessListener { snapshot ->
                             if (!snapshot.isEmpty && snapshot != null) {
                                 onSuccess(snapshot.map { it.toObject(Feed::class.java) })
+                            } else {
+                                onEmpty()
                             }
                         }.addOnFailureListener {
                             onFailure()
@@ -56,7 +63,15 @@ class FeedDAO {
             }
         }
 
-        fun getTopFeedForUser(userId: String, onSuccess: (List<Feed>) -> Unit, onFailure: () -> Unit) {
+        fun getTopFeedForUser(userId: String,
+                              onSuccess: (List<Feed>) -> Unit,
+                              onFailure: () -> Unit,
+                              onEmpty: () -> Unit) {
+
+            if (userId.isEmpty()) {
+                onFailure()
+                return
+            }
 
             val db = FirebaseFirestore.getInstance()
 
@@ -69,6 +84,8 @@ class FeedDAO {
                     .addOnSuccessListener { snapshot ->
                         if (!snapshot.isEmpty && snapshot != null) {
                             onSuccess(snapshot.map { it.toObject(Feed::class.java) })
+                        } else {
+                            onEmpty()
                         }
                     }.addOnFailureListener {
                         onFailure()
@@ -76,6 +93,10 @@ class FeedDAO {
         }
 
         fun addCategoryFeed(categoryName: String) {
+
+            if (categoryName.isEmpty()) {
+                return
+            }
 
             val db = FirebaseFirestore.getInstance()
 

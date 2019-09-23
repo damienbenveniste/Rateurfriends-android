@@ -31,6 +31,17 @@ class FeedController(
                             Toast.LENGTH_SHORT
                     ).show()
 
+                },
+                onEmpty = {
+                    fragment.progressLayout!!.visibility = View.GONE
+                    fragment.emptyLayout!!.visibility = View.VISIBLE
+                    fragment.feedList.clear()
+                    fragment.feedAdapter!!.notifyDataSetChanged()
+                    Toast.makeText(
+                            fragment.context,
+                            fragment.getString(R.string.feed_no_feeds),
+                            Toast.LENGTH_SHORT
+                    ).show()
                 }
 
         )
@@ -57,11 +68,25 @@ class FeedController(
                             Toast.LENGTH_SHORT
                     ).show()
 
+                },
+                onEmpty = {
+                    fragment.progressLayout!!.visibility = View.GONE
+                    fragment.emptyLayout!!.visibility = View.VISIBLE
+                    fragment.feedList.clear()
+                    fragment.feedAdapter!!.notifyDataSetChanged()
+                    Toast.makeText(
+                            fragment.context,
+                            fragment.getString(R.string.feed_no_feeds),
+                            Toast.LENGTH_SHORT
+                    ).show()
                 }
         )
     }
 
     fun changeFeedState() {
+
+        fragment.progressLayout!!.visibility = View.VISIBLE
+        fragment.emptyLayout!!.visibility = View.GONE
 
         if (fragment.feedButton!!.isChecked) {
             getFeedForUser()

@@ -23,6 +23,7 @@ class SearchController(val fragment: SearchFragment) {
     fun getContacts() {
 
         fragment.progressLayout!!.visibility = View.VISIBLE
+        fragment.emptyLayout!!.visibility = View.GONE
         contactAdapter = ContactProfileAdapter(contactList, fragment)
         fragment.rvContacts!!.adapter = contactAdapter
         fragment.rvContacts!!.layoutManager = LinearLayoutManager(fragment.activity)
@@ -41,6 +42,17 @@ class SearchController(val fragment: SearchFragment) {
                     Toast.makeText(
                             fragment.activity!!,
                             fragment.getString(R.string.search_could_not_get_contacts),
+                            Toast.LENGTH_LONG
+                    ).show()
+                },
+                onEmpty = {
+                    fragment.progressLayout!!.visibility = View.GONE
+                    fragment.emptyLayout!!.visibility = View.VISIBLE
+                    contactList.clear()
+                    contactAdapter!!.notifyDataSetChanged()
+                    Toast.makeText(
+                            fragment.activity!!,
+                            fragment.getString(R.string.search_no_contacts),
                             Toast.LENGTH_LONG
                     ).show()
                 }

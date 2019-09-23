@@ -335,9 +335,18 @@ class ProfileController(
                     rvCategories.layoutManager = LinearLayoutManager(fragment.activity!!)
                 },
                 onFailure = {
+                    fragment.progressLayout!!.visibility = View.GONE
                     Toast.makeText(
                             fragment.activity!!,
                             fragment.getString(R.string.contact_profile_could_not_get_qualities),
+                            Toast.LENGTH_LONG
+                    ).show()
+                },
+                onEmpty = {
+                    fragment.progressLayout!!.visibility = View.GONE
+                    Toast.makeText(
+                            fragment.activity!!,
+                            fragment.getString(R.string.profile_no_quality),
                             Toast.LENGTH_LONG
                     ).show()
                 }

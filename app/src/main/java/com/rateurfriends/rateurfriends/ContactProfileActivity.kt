@@ -4,10 +4,7 @@ import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.RatingBar
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -36,6 +33,7 @@ class ContactProfileActivity : AppCompatActivity() , ContactCategoryAdapter.Item
     var meanStarTextView: TextView? = null
     var startNumberTextView: TextView? = null
     var progressLayout: FrameLayout? = null
+    var emptyLayout: LinearLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +63,7 @@ class ContactProfileActivity : AppCompatActivity() , ContactCategoryAdapter.Item
         meanStarTextView = findViewById(R.id.tv_mean_star)
         startNumberTextView = findViewById(R.id.tv_start_number)
         progressLayout = findViewById(R.id.progress_layout)
+        emptyLayout = findViewById(R.id.empty_layout)
 
         rvCategories!!.addItemDecoration(
                 DividerItemDecoration(this, DividerItemDecoration.VERTICAL))

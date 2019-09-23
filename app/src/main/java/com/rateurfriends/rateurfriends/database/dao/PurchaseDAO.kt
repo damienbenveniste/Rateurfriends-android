@@ -18,7 +18,13 @@ class PurchaseDAO() {
         }
 
         fun capturePurchase(product: Product, onFailure: () -> Unit) {
-            val purchaseId = product.timeStamp.toString()
+
+            val purchaseId = product.productId + "_" + product.timeStamp.toString()
+
+            if (product.userId.isEmpty() || purchaseId.isEmpty()) {
+                onFailure()
+                return
+            }
 
             val db = FirebaseFirestore.getInstance()
 

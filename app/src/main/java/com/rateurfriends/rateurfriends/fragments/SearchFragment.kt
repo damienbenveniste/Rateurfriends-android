@@ -25,6 +25,7 @@ class SearchFragment : Fragment() , ContactProfileAdapter.ItemClickListener {
     var rvContacts: RecyclerView? = null
     var searchView: SearchView? = null
     var progressLayout: FrameLayout? = null
+    var emptyLayout: FrameLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +44,7 @@ class SearchFragment : Fragment() , ContactProfileAdapter.ItemClickListener {
 
         rvContacts = view.findViewById(R.id.rv_contacts) as RecyclerView
         progressLayout = view.findViewById(R.id.progress_layout)
+        emptyLayout = view.findViewById(R.id.empty_layout)
 
         searchController!!.getContacts()
 
