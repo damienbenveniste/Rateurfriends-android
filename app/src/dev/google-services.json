@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1041755294595",
+    "firebase_url": "https://rateurfriends-2c8ed.firebaseio.com",
+    "project_id": "rateurfriends-2c8ed",
+    "storage_bucket": "rateurfriends-2c8ed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1041755294595:android:a6bbcd0627ca227a",
+        "android_client_info": {
+          "package_name": "com.rateurfriends.rateurfriends"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1041755294595-g9gdh86kdp4a5ifl0apj05dshkipg1jt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rateurfriends.rateurfriends",
+            "certificate_hash": "4dcc3614a42f843bbe7965b44de1fcc656f2efc7"
+          }
+        },
+        {
+          "client_id": "1041755294595-h5g0568itdpbrv3umcil9d5b9le50g5v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIwuoaVVaDPzdGjbjA-fpJVH7LdqOK0Rc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1041755294595-h5g0568itdpbrv3umcil9d5b9le50g5v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "305606658128",
+    "firebase_url": "https://rateurfriends-staging.firebaseio.com",
+    "project_id": "rateurfriends-staging",
+    "storage_bucket": "rateurfriends-staging.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:305606658128:android:6dcfff1f4c1da3195ee955",
+        "android_client_info": {
+          "package_name": "com.rateurfriends.rateurfriends"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "305606658128-7d0bgrclqmhiq6kr53l3seqoedm5nbuk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rateurfriends.rateurfriends",
+            "certificate_hash": "92c30b16efba41f23571814fc056fa8399ffc919"
+          }
+        },
+        {
+          "client_id": "305606658128-jk30r5mn81jv7135kjn2onns4ibsmkpm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyTU7o5g6q-Bv3G-vK2gj36eN1VqTb2p0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "305606658128-jk30r5mn81jv7135kjn2onns4ibsmkpm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
