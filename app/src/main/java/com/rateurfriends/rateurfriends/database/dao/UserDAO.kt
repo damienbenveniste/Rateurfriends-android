@@ -127,7 +127,7 @@ class UserDAO {
                        onSuccess: () -> Unit,
                        onFailure: () -> Unit) {
 
-            if (user.userId.isEmpty() || categoryList.map { it.categoryName.isEmpty()}.any()) {
+            if (user.userId.isEmpty() || categoryList.map { it.categoryName.isEmpty()}.any {it}) {
                 onFailure()
                 return
             }
@@ -448,7 +448,7 @@ class UserDAO {
                        onSuccess: () -> Unit,
                        onFailure: () -> Unit) {
 
-            if (userId.isEmpty() || contact.userId.isEmpty()) {
+            if (userId.isEmpty()) {
                 onFailure()
                 return
             }

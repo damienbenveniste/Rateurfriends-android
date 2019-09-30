@@ -361,7 +361,7 @@ class CategoryDAO {
             } else {
 
                 db.collection("Category")
-                        .orderBy("counts", Query.Direction.DESCENDING)
+                        .orderBy("count", Query.Direction.DESCENDING)
                         .limit(20)
                         .get()
                         .addOnSuccessListener { snapshot ->

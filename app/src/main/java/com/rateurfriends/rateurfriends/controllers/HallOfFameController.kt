@@ -75,7 +75,7 @@ class HallOfFameController(val fragment: HallOfFameFragment) {
         val locationState = fragment.locationButton!!.isChecked
         val orderCountByState = fragment.orderByCountButton!!.isChecked
         val descendingDirectionState = fragment.descendingDirectionButton!!.isChecked
-        val byCategoryState = fragment.byCategoryButton!!.isChecked
+        val byCategoryState = !fragment.byCategoryButton!!.isChecked
 
         fragment.progressLayout!!.visibility = View.VISIBLE
 
@@ -112,7 +112,7 @@ class HallOfFameController(val fragment: HallOfFameFragment) {
 
                             rvContacts.adapter = contactAdapter
                             rvContacts.layoutManager = LinearLayoutManager(
-                                    fragment.activity,
+                                    fragment.context,
                                     LinearLayoutManager.HORIZONTAL,
                                     false
                             )

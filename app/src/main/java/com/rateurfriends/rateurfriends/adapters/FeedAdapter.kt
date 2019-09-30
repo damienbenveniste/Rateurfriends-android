@@ -12,6 +12,7 @@ import com.rateurfriends.rateurfriends.R
 import com.rateurfriends.rateurfriends.customViews.LevelView
 import com.rateurfriends.rateurfriends.database.dao.PictureDAO
 import com.rateurfriends.rateurfriends.database.dao.UserDAO
+import com.rateurfriends.rateurfriends.helperClasses.Globals
 import com.rateurfriends.rateurfriends.models.Feed
 import com.rateurfriends.rateurfriends.models.User
 
@@ -49,30 +50,6 @@ class FeedAdapter(
                         holder.pictureImageView,
                         fragment.context!!
                 )
-            }
-            // todo : to remove when the dev data will have a feedtype
-            "" -> {
-
-                holder.levelView.visibility = View.VISIBLE
-                holder.feedTypeTextView.text = fragment.getString(R.string.feed_level_passed)
-
-                holder.message.text = Html.fromHtml(
-                        fragment.getString(R.string.feed_level_passed_message)
-                                .format(
-                                        feed.userName.capitalize(),
-                                        feed.levelNumber(),
-                                        feed.getNearestStarThreshold()
-                                )
-                )
-
-                holder.levelView.levelText = feed.level
-
-                PictureDAO.populateImageViewWithUserId(
-                        feed.userId,
-                        holder.pictureImageView,
-                        fragment.context!!
-                )
-
             }
             "vote_added" -> {
 
@@ -131,7 +108,7 @@ class FeedAdapter(
             itemView.setOnClickListener {
                 val feed = feedList[adapterPosition]
                 val userId = feed.userId
-                if (feed.feedType != "vote_added") {
+                if (feed.feedType != "vote_added" && userId != Globals.getInstance().user!!.userId) {
                     UserDAO.getUser(userId,
                             onSuccess = {
                                 val listener = fragment as ItemClickListener

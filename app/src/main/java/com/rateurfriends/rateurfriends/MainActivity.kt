@@ -4,6 +4,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.AsyncTask
 import android.os.Build
@@ -46,6 +47,11 @@ class MainActivity : AppCompatActivity(),
 
     private lateinit var drawer: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
+
+    private val PERMISSION_ALL = 79
+    private val PERMISSIONS = arrayOf(
+            android.Manifest.permission.READ_CONTACTS
+    )
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView
             .OnNavigationItemSelectedListener { item ->
@@ -142,6 +148,19 @@ class MainActivity : AppCompatActivity(),
         navigation.itemIconTintList = null
         navigation.selectedItemId = R.id.navigation_friends_feed
 
+        checkPermissionAndFriends()
+    }
+
+    private fun checkPermissionAndFriends() {
+
+        if(!hasPermissions(*PERMISSIONS)){
+            requestPermissions(PERMISSIONS, PERMISSION_ALL)
+        } else {
+            checkFriends()
+        }
+    }
+
+    private fun checkFriends() {
         val prefs = this.getSharedPreferences(
                 this.getString(R.string.shared_preference_file),
                 Context.MODE_PRIVATE
@@ -170,6 +189,29 @@ class MainActivity : AppCompatActivity(),
         } catch (e: ParseException) {
             e.printStackTrace()
         }
+    }
+
+    private fun hasPermissions(vararg permissions: String): Boolean = permissions.all {
+        checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>,
+                                            grantResults: IntArray) {
+
+        when (requestCode) {
+            PERMISSION_ALL -> {
+                if ((grantResults.isNotEmpty() &&
+                                grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+
+                    checkFriends()
+
+                }
+                return
+            }
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
     }
 

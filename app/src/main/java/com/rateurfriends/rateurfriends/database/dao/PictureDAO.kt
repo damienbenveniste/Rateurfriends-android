@@ -68,14 +68,18 @@ class PictureDAO {
             }
 
             val gsReference = FirebaseStorage.getInstance().getReference("profile_pictures/" + userId)
-            GlideApp
-                    .with(context)
-                    .load(gsReference)
-                    .override(400, 400)
-                    .centerCrop()
-                    .skipMemoryCache(true)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .into(imageView)
+
+            gsReference.downloadUrl.addOnSuccessListener {
+                GlideApp
+                        .with(context)
+                        .load(gsReference)
+                        .override(400, 400)
+                        .centerCrop()
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .into(imageView)
+            }
+
 
         }
 
@@ -86,14 +90,17 @@ class PictureDAO {
             }
 
             val gsReference = FirebaseStorage.getInstance().getReference("profile_pictures/" + userId)
-            GlideApp
-                    .with(context)
-                    .load(gsReference)
-                    .override(200, 200)
-                    .centerCrop()
+
+            gsReference.downloadUrl.addOnSuccessListener {
+                GlideApp
+                        .with(context)
+                        .load(gsReference)
+                        .override(400, 400)
+                        .centerCrop()
 //                .skipMemoryCache(true)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .into(imageView)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .into(imageView)
+            }
         }
 
     }

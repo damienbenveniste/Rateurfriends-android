@@ -152,8 +152,8 @@
                         app:showText="true"
                         android:checked="true"
                         android:text="@string/hall_of_fame_switch_category_text"
-                        android:textOn="@string/hall_of_fame_switch_category_text_on"
-                        android:textOff="@string/hall_of_fame_switch_category_text_off" />
+                        android:textOff="@string/hall_of_fame_switch_category_text_on"
+                        android:textOn="@string/hall_of_fame_switch_category_text_off" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/bt_submit"

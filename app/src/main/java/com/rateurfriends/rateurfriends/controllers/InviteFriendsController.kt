@@ -11,7 +11,6 @@ import android.telephony.PhoneNumberUtils
 import android.view.View
 import android.widget.FrameLayout
 import androidx.core.app.ActivityCompat
-import androidx.recyclerview.widget.RecyclerView
 import com.rateurfriends.rateurfriends.MainActivity
 import com.rateurfriends.rateurfriends.adapters.AllContactsAdapter
 import com.rateurfriends.rateurfriends.database.dao.UserDAO
@@ -31,8 +30,7 @@ class InviteFriendsController(val activity: Activity,
 
     private val PERMISSION_ALL = 79
     private val PERMISSIONS = arrayOf(
-            android.Manifest.permission.READ_CONTACTS,
-            android.Manifest.permission.SEND_SMS
+            android.Manifest.permission.READ_CONTACTS
     )
 
     fun setTextView(textView: TextView) {
@@ -43,19 +41,14 @@ class InviteFriendsController(val activity: Activity,
                 .format(user.spareCategories)
     }
 
-    fun removeView(view: View) {
-        view.visibility = View.GONE
-    }
-
     fun requestPermission(map: LinkedHashMap<String, Contact>,
-                                  adapter: AllContactsAdapter,
-                          warningLayout: FrameLayout) {
+                                  adapter: AllContactsAdapter) {
 
 
         if(!hasPermissions(activity, *PERMISSIONS)){
             ActivityCompat.requestPermissions(activity, PERMISSIONS, PERMISSION_ALL)
         } else {
-            getContacts(map, adapter, warningLayout)
+            getContacts(map, adapter)
         }
     }
 
@@ -67,15 +60,14 @@ class InviteFriendsController(val activity: Activity,
     fun handlePermissions(requestCode: Int,
                           grantResults: IntArray,
                           map: LinkedHashMap<String, Contact>,
-                          adapter: AllContactsAdapter,
-                          warningLayout: FrameLayout) {
+                          adapter: AllContactsAdapter) {
 
         when (requestCode) {
             PERMISSION_ALL -> {
                 if ((grantResults.isNotEmpty() &&
                                 grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
 
-                    getContacts(map, adapter, warningLayout)
+                    getContacts(map, adapter)
 
                 } else {
                     val intent = Intent(activity, MainActivity::class.java)
@@ -89,11 +81,9 @@ class InviteFriendsController(val activity: Activity,
     }
 
     private fun getContacts(map: LinkedHashMap<String, Contact>,
-                            adapter: AllContactsAdapter,
-                            warningLayout: FrameLayout) {
+                            adapter: AllContactsAdapter) {
 
         progressLayout.visibility = View.VISIBLE
-        warningLayout.visibility = View.VISIBLE
 
         UserDAO.getInvitedContactsForUser(Globals.getInstance().user!!.userId,
                 onSuccess = {
@@ -165,7 +155,7 @@ class InviteFriendsController(val activity: Activity,
                         ContactsContract.CommonDataKinds.Phone.NUMBER
                 )
 
-                var counter = 0
+//                var counter = 0
                 while (cursor.moveToNext()) {
 
                     val displayName = cursor.getString(displayNameIndex)
@@ -182,10 +172,10 @@ class InviteFriendsController(val activity: Activity,
                         contact.invited = contact.phoneNumber in phoneSet
                         contactMap[phoneNumber] = contact
 
-                        if (counter == 10) {
-                            publishProgress(counter)
-                        }
-                        counter++
+//                        if (counter == 10) {
+//                            publishProgress(counter)
+//                        }
+//                        counter++
                     }
                 }
                 cursor.close()
@@ -195,12 +185,12 @@ class InviteFriendsController(val activity: Activity,
             return null
         }
 
-        override fun onProgressUpdate(vararg counter: Int?) {
-            super.onProgressUpdate(*counter)
-            progressLayout.visibility = View.GONE
-            contactAdapter.notifyDataSetChanged()
-
-        }
+//        override fun onProgressUpdate(vararg counter: Int?) {
+//            super.onProgressUpdate(*counter)
+//            progressLayout.visibility = View.GONE
+//            contactAdapter.notifyDataSetChanged()
+//
+//        }
 
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)

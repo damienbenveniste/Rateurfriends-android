@@ -97,8 +97,10 @@ class LoginController(
             )
             prefs.edit().putBoolean(activity.getString(R.string.first_time_login), false).apply()
         } else {
-            Globals.getInstance().setUser()
-            activity.startActivity(nextTimeIntent)
+            Globals.getInstance().setUser {
+                activity.startActivity(nextTimeIntent)
+            }
+
         }
     }
 

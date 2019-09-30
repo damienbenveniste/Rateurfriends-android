@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rateurfriends.rateurfriends.R
 import com.rateurfriends.rateurfriends.customViews.LevelView
 import com.rateurfriends.rateurfriends.database.dao.PictureDAO
+import com.rateurfriends.rateurfriends.helperClasses.Globals
 import com.rateurfriends.rateurfriends.models.User
 
 class UserRankingAdapter constructor(
@@ -69,7 +70,9 @@ class UserRankingAdapter constructor(
             itemView.setOnClickListener {
                 val user = userList[adapterPosition]
                 val listener = fragment as ItemClickListener
-                listener.onItemClicked(user, "")
+                if (user.userId != Globals.getInstance().user!!.userId) {
+                    listener.onItemClicked(user, "")
+                }
             }
 
         }

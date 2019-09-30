@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:ems="6"
             android:autofillHints="username"
-            android:inputType="textPersonName"
+            android:inputType="textCapSentences"
             android:hint="@string/info_collection_username_hint" />
 
         <com.google.android.material.button.MaterialButton

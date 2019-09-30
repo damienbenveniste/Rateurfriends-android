@@ -2,34 +2,21 @@ package com.rateurfriends.rateurfriends.adapters
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
-//import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.dynamiclinks.DynamicLink
-import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.rateurfriends.rateurfriends.R
 import com.rateurfriends.rateurfriends.models.Contact
-import com.rateurfriends.rateurfriends.models.User
 import androidx.core.graphics.drawable.DrawableCompat
-import android.graphics.drawable.Drawable
-import android.telephony.SmsManager
 import androidx.appcompat.content.res.AppCompatResources
 import com.google.android.material.button.MaterialButton
-import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlin.random.Random
-import android.content.IntentFilter
 import android.app.Activity
-import android.content.BroadcastReceiver
-import android.app.PendingIntent
 import com.rateurfriends.rateurfriends.database.dao.UserDAO
 import com.rateurfriends.rateurfriends.helperClasses.Globals
 
@@ -39,6 +26,11 @@ class AllContactsAdapter(
         private val mContext: Context,
         private val textView: TextView
 ) : RecyclerView.Adapter<AllContactsAdapter.ContactViewHolder>() {
+
+    private val FIRST_INVITE = 123
+    private val RESEND_INVITE = 234
+    private var invitedContact: Contact? = null
+
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
@@ -78,7 +70,7 @@ class AllContactsAdapter(
                 holder.inviteButton.setOnClickListener {
                     holder.inviteButton.isEnabled = false
                     holder.inviteButton.alpha = 1f
-                    resendInvite(contact)
+                    onShareClicked(contact, position)
                 }
             } else {
                 holder.inviteButton.isClickable = false
@@ -119,58 +111,93 @@ class AllContactsAdapter(
         )
     }
 
-    private fun resendInvite(contact: Contact) {
-        val smsManager = SmsManager.getDefault() as SmsManager
+//    private fun resendInvite(contact: Contact) {
+//        val smsManager = SmsManager.getDefault() as SmsManager
+//
+//        val text = mContext.getString(R.string.invite_friends_second_invite_message)
+//
+//        smsManager.sendTextMessage(
+//                contact.phoneNumber,
+//                null,
+//                text,
+//                null,
+//                null)
+//
+//    }
 
-        val text = mContext.getString(R.string.invite_friends_second_invite_message)
+    fun onActivityResult(requestCode: Int) {
 
-        smsManager.sendTextMessage(
-                contact.phoneNumber,
-                null,
-                text,
-                null,
-                null)
+        if (requestCode == FIRST_INVITE && invitedContact != null)
+            rewardUser(invitedContact!!)
+    }
 
+    private fun sendSMS(contact: Contact, text: String, requestCode: Int) {
+        val uri = Uri.parse("smsto:" + contact.phoneNumber)
+        val intent = Intent(Intent.ACTION_SENDTO, uri)
+        intent.putExtra("sms_body", text)
+        intent.putExtra("exit_on_sent", true)
+        if (intent.resolveActivity(mContext.packageManager) != null) {
+            (mContext as Activity).startActivityForResult(intent, requestCode)
+        }
 
     }
 
     private fun onShareClicked(contact: Contact, position: Int) {
 
-        val smsManager = SmsManager.getDefault() as SmsManager
-        val sentPI = PendingIntent.getBroadcast(mContext, 0, Intent( "SMS_SENT"), 0)
-
-        mContext.registerReceiver(
-                object : BroadcastReceiver() {
-                    override fun onReceive(arg0: Context, arg1: Intent) {
-                        when (resultCode) {
-                            Activity.RESULT_OK -> {
-                                rewardUser(contact)
-                            }
-                            SmsManager.RESULT_ERROR_GENERIC_FAILURE -> {
-                            }
-                            SmsManager.RESULT_ERROR_NO_SERVICE -> {
-                            }
-                            SmsManager.RESULT_ERROR_NULL_PDU -> {
-                            }
-                            SmsManager.RESULT_ERROR_RADIO_OFF -> {
-                            }
-                        }
-                    }
-                }, IntentFilter( "SMS_SENT"))
-
-        val text =  mContext.getString(R.string.invite_friends_first_invite_message)
-
-        contact.invited = true
-        contactMap[contact.phoneNumber] = contact
-        this.notifyItemChanged(position)
-
-        smsManager.sendTextMessage(
-                contact.phoneNumber,
-                null,
-                text,
-                sentPI,
-                null)
+        var text: String? = null
+        var requestCode: Int? = null
+        invitedContact = contact
+        if (contact.invited) {
+            text = mContext.getString(R.string.invite_friends_second_invite_message)
+            requestCode = RESEND_INVITE
+        } else {
+            text =  mContext.getString(R.string.invite_friends_first_invite_message)
+            requestCode = FIRST_INVITE
+            contact.invited = true
+            contactMap[contact.phoneNumber] = contact
+            this.notifyItemChanged(position)
+        }
+        sendSMS(contact, text, requestCode)
     }
+
+//    private fun onShareClicked(contact: Contact, position: Int) {
+//
+//        val smsManager = SmsManager.getDefault() as SmsManager
+//        val sentPI = PendingIntent.getBroadcast(mContext, 0, Intent( "SMS_SENT"), 0)
+//
+//
+//        mContext.registerReceiver(
+//                object : BroadcastReceiver() {
+//                    override fun onReceive(arg0: Context, arg1: Intent) {
+//                        when (resultCode) {
+//                            Activity.RESULT_OK -> {
+//                                rewardUser(contact)
+//                            }
+//                            SmsManager.RESULT_ERROR_GENERIC_FAILURE -> {
+//                            }
+//                            SmsManager.RESULT_ERROR_NO_SERVICE -> {
+//                            }
+//                            SmsManager.RESULT_ERROR_NULL_PDU -> {
+//                            }
+//                            SmsManager.RESULT_ERROR_RADIO_OFF -> {
+//                            }
+//                        }
+//                    }
+//                }, IntentFilter( "SMS_SENT"))
+//
+//        val text =  mContext.getString(R.string.invite_friends_first_invite_message)
+//
+//        contact.invited = true
+//        contactMap[contact.phoneNumber] = contact
+//        this.notifyItemChanged(position)
+//
+//        smsManager.sendTextMessage(
+//                contact.phoneNumber,
+//                null,
+//                text,
+//                sentPI,
+//                null)
+//    }
 
 
     override fun getItemCount(): Int {

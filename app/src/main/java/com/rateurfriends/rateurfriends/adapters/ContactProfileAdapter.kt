@@ -10,6 +10,7 @@ import com.rateurfriends.rateurfriends.R
 import com.rateurfriends.rateurfriends.customViews.LevelView
 import com.rateurfriends.rateurfriends.database.dao.PictureDAO
 import com.rateurfriends.rateurfriends.database.dao.UserDAO
+import com.rateurfriends.rateurfriends.helperClasses.Globals
 import com.rateurfriends.rateurfriends.models.Contact
 import com.rateurfriends.rateurfriends.models.User
 
@@ -108,7 +109,7 @@ class ContactProfileAdapter constructor(
             itemView.setOnClickListener {
                 val contact = contactSearchList[adapterPosition]
                 val userId = contact.userId
-                if (userId in userMap) {
+                if (userId in userMap && userId != Globals.getInstance().user!!.userId) {
                     val listener = fragment as ItemClickListener
                     listener.onItemClicked(userMap[userId]!!, contact.phoneName)
                 }

@@ -106,10 +106,10 @@ class MarketPlaceController(var fragment: MarketPlaceFragment) {
 
         val purchase = purchases?.first()
 
-        fragment.progressLayout!!.visibility = View.VISIBLE
-
         if (billingResult!!.responseCode == BillingClient.BillingResponseCode.OK &&
                 purchase?.purchaseToken != null) {
+
+            fragment.progressLayout!!.visibility = View.VISIBLE
 
             val userId = FirebaseAuth.getInstance().currentUser!!.uid
             val sku = purchase.sku

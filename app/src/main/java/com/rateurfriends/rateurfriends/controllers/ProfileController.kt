@@ -237,8 +237,7 @@ class ProfileController(
 
             pictureController.getCameraView()
         } else {
-            ActivityCompat.requestPermissions(
-                    fragment.activity!!,
+            fragment.requestPermissions(
                     arrayOf(android.Manifest.permission.CAMERA),
                     REQUEST_CAMERA
             )
@@ -255,8 +254,7 @@ class ProfileController(
             pictureController.getImageChooserView()
 
         } else {
-            ActivityCompat.requestPermissions(
-                    fragment.activity!!,
+            fragment.requestPermissions(
                     arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
                     REQUEST_UPLOAD
             )

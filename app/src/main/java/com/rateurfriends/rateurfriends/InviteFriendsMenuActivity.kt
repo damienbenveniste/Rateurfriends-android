@@ -1,5 +1,8 @@
 package com.rateurfriends.rateurfriends
 
+import android.app.Activity
+import android.app.PendingIntent
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -20,8 +23,6 @@ class InviteFriendsMenuActivity : AppCompatActivity() {
     private var inviteFriendsController: InviteFriendsController? = null
     private var spareCategoriesTextView: TextView? = null
     private var progressLayout: FrameLayout? = null
-    private var warningLayout: FrameLayout? = null
-    private var confirmButton: MaterialButton? = null
 
     private val contactMap: LinkedHashMap<String, Contact> = linkedMapOf()
     private var contactAdapter: AllContactsAdapter? = null
@@ -41,13 +42,7 @@ class InviteFriendsMenuActivity : AppCompatActivity() {
         rvContacts = findViewById(R.id.rvContacts)
         spareCategoriesTextView = findViewById(R.id.tv_spare_categories)
         progressLayout = findViewById(R.id.progress_layout)
-        warningLayout = findViewById(R.id.layout_warning)
-        confirmButton = findViewById(R.id.bt_confirm)
         emptyLayout = findViewById(R.id.empty_layout)
-
-        confirmButton!!.setOnClickListener {
-            inviteFriendsController!!.removeView(warningLayout!!)
-        }
 
         rvContacts!!.addItemDecoration(
                 DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
@@ -61,8 +56,7 @@ class InviteFriendsMenuActivity : AppCompatActivity() {
 
         inviteFriendsController!!.requestPermission(
                 contactMap,
-                contactAdapter!!,
-                warningLayout!!)
+                contactAdapter!!)
 
         inviteFriendsController!!.setTextView(spareCategoriesTextView!!)
 
@@ -76,14 +70,20 @@ class InviteFriendsMenuActivity : AppCompatActivity() {
                 requestCode,
                 grantResults,
                 contactMap,
-                contactAdapter!!,
-                warningLayout!!
+                contactAdapter!!
         )
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        contactAdapter!!.onActivityResult(requestCode)
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
 }

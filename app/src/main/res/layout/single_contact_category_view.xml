@@ -118,6 +118,7 @@
                     android:stepSize="1"
                     android:scaleX="0.8"
                     android:scaleY="0.8"
+                    android:rating="3"
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />

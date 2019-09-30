@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rateurfriends.rateurfriends.R
 import com.rateurfriends.rateurfriends.database.dao.PictureDAO
 import com.rateurfriends.rateurfriends.database.dao.UserDAO
+import com.rateurfriends.rateurfriends.helperClasses.Globals
 import com.rateurfriends.rateurfriends.models.Category
 import com.rateurfriends.rateurfriends.models.User
 import io.opencensus.resource.Resource
@@ -89,7 +90,7 @@ class CategoryRankingAdapter constructor(
             itemView.setOnClickListener {
                 val category = categoryList[adapterPosition]
                 val userId = category.userId
-                if (userId in userMap) {
+                if (userId in userMap && userId != Globals.getInstance().user!!.userId) {
                     val listener = fragment as ItemClickListener
                     listener.onItemClicked(userMap[userId]!!, "")
                 }

@@ -1,5 +1,7 @@
 package com.rateurfriends.rateurfriends.models
 
+import com.google.firebase.firestore.Exclude
+
 class Vote (
         val rating: Int = 0,
 
@@ -12,6 +14,7 @@ class Vote (
         val timeStamp: Long = System.currentTimeMillis() / 1000L
 ) {
 
+    @Exclude
     fun getRatingStars(): String {
 
         var initString = ""

@@ -15,6 +15,7 @@ import com.rateurfriends.rateurfriends.R
 import com.rateurfriends.rateurfriends.database.dao.CategoryDAO
 import com.rateurfriends.rateurfriends.database.dao.VoteDAO
 import com.rateurfriends.rateurfriends.models.Category
+import kotlin.math.roundToInt
 
 class ContactCategoryAdapter constructor(
         private val userId: String,
@@ -50,6 +51,7 @@ class ContactCategoryAdapter constructor(
                     holder.userVoteTextView.text = mContext
                             .getString(R.string.contact_profile_your_vote)
                             .format(it.getRatingStars())
+                    holder.ratingBar.rating = it.rating.toFloat()
                 },
                 onFailure = {
                     println("Could not get the vote")
@@ -84,9 +86,11 @@ class ContactCategoryAdapter constructor(
 
     private fun submitRating(layout: FrameLayout, rating: Float, category: Category, position: Int ) {
 
+        val ratingInt = rating.roundToInt()
+
         progressLayout.visibility = View.VISIBLE
         VoteDAO.updateVoteForUser(
-                rating.toInt(),
+                ratingInt,
                 userId,
                 category.userId,
                 category.categoryName,
